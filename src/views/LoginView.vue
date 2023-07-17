@@ -11,44 +11,37 @@
               backdrop-filter: blur(30px);
               ">
             <div class="card-body p-5 shadow-5 text-center">
-              <h2 class="fw-bold mb-5">Login now</h2>
-              <form>
+              <h2 class="fw-bold mb-5">系統登入</h2>
+              <form @submit.prevent="login">
                 <!-- Email input -->
                 <div class="d-flex justify-content-center">
-                  <div class="form-outline mb-4 w-75">
-                    <input type="email" id="loginEmail" class="form-control" placeholder="Email"/>
+                  <div class="form-outline mb-4 col-md-8">
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Email" v-model="email"/>
                   </div>
                 </div>
 
                 <!-- Password input -->
                 <div class="d-flex justify-content-center">
-                  <div class="form-outline mb-4 w-75">
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Password"/>
+                  <div class="form-outline mb-4 col-md-8">
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Password" v-model="password"/>
                   </div>
                 </div>
 
                 <!-- Submit button -->
                 <button type="submit" class="btn btn-primary btn-block mb-4">
-                  Sign up
+                  Login
                 </button>
 
                 <!-- Register buttons -->
                 <div class="text-center">
                   <p>or login with:</p>
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-facebook-f"></i>
+                  
+                  <button type="button" class="btn btn-outline-primary rounded-circle btn-floating mx-1">
+                    <font-awesome-icon icon="fa-brands fa-facebook" />
                   </button>
 
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-google"></i>
-                  </button>
-
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-twitter"></i>
-                  </button>
-
-                  <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-github"></i>
+                  <button type="button" class="btn btn-outline-danger rounded-circle btn-floating mx-1">
+                    <font-awesome-icon icon="fa-brands fa-google" />
                   </button>
                 </div>
               </form>
@@ -78,3 +71,13 @@
   }
 }
 </style>
+
+<script setup>
+import { ref } from 'vue'
+const email = ref('');
+const password = ref('');
+const login = () => {
+  console.log(email.value)
+  console.log(password.value)
+}
+</script>
