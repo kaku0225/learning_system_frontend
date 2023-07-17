@@ -16,14 +16,14 @@
                 <!-- Email input -->
                 <div class="d-flex justify-content-center">
                   <div class="form-outline mb-4 col-md-8">
-                    <input type="email" id="loginEmail" class="form-control" placeholder="Email" v-model="email"/>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Email" v-model="user.email"/>
                   </div>
                 </div>
 
                 <!-- Password input -->
                 <div class="d-flex justify-content-center">
                   <div class="form-outline mb-4 col-md-8">
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Password" v-model="password"/>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Password" v-model="user.password"/>
                   </div>
                 </div>
 
@@ -74,10 +74,25 @@
 
 <script setup>
 import { ref } from 'vue'
-const email = ref('');
-const password = ref('');
-const login = () => {
-  console.log(email.value)
-  console.log(password.value)
+import axios from "axios";
+const user = ref({
+  email: '',
+  password: ''
+})
+
+function login() {
+  const api = axios.create({
+    baseURL: import.meta.env.VITE_VUE_API,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      Accept: "application/json",
+    },
+  });
+  
+  api.post("api/v1/users/login", {user: user.value}).then((res) => {
+    console.log(res)
+    const { token, expired } = res.data
+    document.cookie = `token=${token}; expires=${new Date(expired)}`;
+  })
 }
 </script>
