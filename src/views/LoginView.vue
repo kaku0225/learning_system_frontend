@@ -27,6 +27,15 @@
                   </div>
                 </div>
 
+                <div class="d-flex flex-row-reverse col-md-10 mb-4">
+                  <div>
+                    <router-link to="/sign_up">註冊</router-link>
+                  </div>
+                  <div class="mx-3">
+                    <a href="#" @click="open">忘記密碼</a>
+                  </div>
+                </div>
+
                 <!-- Submit button -->
                 <button type="submit" class="btn btn-primary btn-block mb-4">
                   Login
@@ -55,9 +64,8 @@
         </div>
       </div>
     </div>
-    <!-- Jumbotron -->
   </section>
-  <!-- Section: Design Block -->
+  <SendResetMailModal ref="resetModal" @sendResetEmail="send"></SendResetMailModal>
 </template>
 
 <style>
@@ -70,15 +78,26 @@
     margin-right: 0;
   }
 }
+
+a {
+  text-decoration: none;
+}
 </style>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import router from '../router';
 import axios from "axios";
+import Modal from 'bootstrap/js/dist/modal'
+
+import SendResetMailModal from '../components/SendResetMailModal.vue'
+
 const user = ref({
   email: '',
   password: ''
 })
+
+const resetModal = ref({ modal: null })
 
 function login() {
   const api = axios.create({
@@ -93,6 +112,25 @@ function login() {
     console.log(res)
     const { token, expired } = res.data
     document.cookie = `token=${token}; expires=${new Date(expired)}`;
+    router.push('/')
   })
 }
+
+function open(){
+  resetModal.value.modal.show()
+}
+
+function close(){
+  resetModal.value.modal.hide()
+}
+
+function send(email){
+  console.log('email:', email)
+  close()
+}
+
+onMounted(() => {
+  resetModal.value.modal = new Modal('#resetModal', {})
+})
+
 </script>
