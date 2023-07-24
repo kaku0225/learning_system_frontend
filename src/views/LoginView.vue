@@ -65,7 +65,7 @@
       </div>
     </div>
   </section>
-  <SendResetMailModal ref="resetModal" @sendResetEmail="send"></SendResetMailModal>
+  <SendResetMailModal ref="resetModal" @sendResetEmail="sendResetPasswordEmail"></SendResetMailModal>
 </template>
 
 <style>
@@ -99,20 +99,29 @@ const user = ref({
 
 const resetModal = ref({ modal: null })
 
+const api = axios.create({
+  baseURL: import.meta.env.VITE_VUE_API,
+  headers: {
+    "Content-Type": "application/json; charset=utf-8",
+    Accept: "application/json",
+  },
+});
+
 function login() {
-  const api = axios.create({
-    baseURL: import.meta.env.VITE_VUE_API,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      Accept: "application/json",
-    },
-  });
-  
-  api.post("api/v1/users/login", {user: user.value}).then((res) => {
+  const loginMutation = `mutation ($email: String!, $password: String!) { login(email: $email, password: $password) { jti expiredTime } }`;
+  const variables = { email: user.value.email, password: user.value.password }
+  const requestContent = {  query: loginMutation, variables: variables };
+  api.post("graphql", requestContent).then((res) => {
     console.log(res)
-    const { token, expired } = res.data
-    document.cookie = `token=${token}; expires=${new Date(expired)}`;
-    router.push('/')
+    if(res.data.errors) {
+      console.log('error')
+    } else {
+      console.log('success')
+      console.log(res.data.data.login)
+      const { jti, expired_time } = res.data.data.login
+      document.cookie = `token=${jti}; expires=${new Date(expired_time)}`;
+      router.push('/')
+    }
   })
 }
 
@@ -124,9 +133,22 @@ function close(){
   resetModal.value.modal.hide()
 }
 
-function send(email){
+function sendResetPasswordEmail(email){
+  // console.log(email)
+  const sendResetPasswordEmailMutation = `mutation ($email: String!) { sendResetPasswordEmail(email: $email) { email } }`;
+  const variables = { email: email }
+  const requestContent = { query: sendResetPasswordEmailMutation, variables: variables }
+  
   console.log('email:', email)
   close()
+  api.post("graphql", requestContent).then((res) => {
+    console.log(res)
+    if(res.data.errors) {
+      console.log('error')
+    } else {
+      console.log('success')
+    }
+  })
 }
 
 onMounted(() => {

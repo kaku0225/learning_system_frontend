@@ -3,7 +3,7 @@
   <section class="text-center">
     <!-- Background image -->
     <div class="p-5 bg-image" style="
-          background-image: url('https://w.wallhaven.cc/full/k7/wallhaven-k7yjd1.jpg');
+          background-image: url('https://images.unsplash.com/flagged/photo-1551301622-6fa51afe75a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
           height: 300px;
           "></div>
     <!-- Background image -->
@@ -74,12 +74,17 @@ function sign_up() {
       Accept: "application/json",
     },
   });
-  
-  api.post("api/v1/users/sign_up", {user: user.value}).then((res) => {
-    if(res.data.success){
+
+  const signUpmutation = `mutation ($name: String!, $email: String!, $password: String!) { signUp(name: $name, email: $email, password: $password ) { id } }`
+  const variables = { name: user.value.name, email: user.value.email, password: user.value.password }
+  const requestContent = { query: signUpmutation, variables: variables }
+
+  api.post("graphql", requestContent).then((res) => {
+    if(res.data.errors) {
+      console.log('error')
+    } else {
       router.push('/login')
     }
-    console.log(res.data.message)
   })
 }
 
