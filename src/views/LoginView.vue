@@ -12,7 +12,7 @@
               ">
             <div class="card-body p-5 shadow-5 text-center">
               <h2 class="fw-bold mb-5">系統登入</h2>
-              <form @submit.prevent="login">
+              <form @submit.prevent="mutationLogin">
                 <!-- Email input -->
                 <div class="d-flex justify-content-center">
                   <div class="form-outline mb-4 col-md-8">
@@ -65,7 +65,7 @@
       </div>
     </div>
   </section>
-  <SendResetMailModal ref="resetModal" @sendResetEmail="sendResetPasswordEmail"></SendResetMailModal>
+  <SendResetMailModal ref="resetModal" @sendResetEmail="mutationSendResetPasswordEmail"></SendResetMailModal>
 </template>
 
 <style>
@@ -86,11 +86,13 @@ a {
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useMutation } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
 import router from '../router';
-import axios from "axios";
 import Modal from 'bootstrap/js/dist/modal'
 
 import SendResetMailModal from '../components/SendResetMailModal.vue'
+
 
 const user = ref({
   email: '',
@@ -99,29 +101,49 @@ const user = ref({
 
 const resetModal = ref({ modal: null })
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_VUE_API,
-  headers: {
-    "Content-Type": "application/json; charset=utf-8",
-    Accept: "application/json",
+const { mutate: login } = useMutation(gql`
+  mutation login ($email: String!, $password: String!) {
+    login (input: {email: $email, password: $password }) {
+      user { jti }
+      success
+      expiredTime
+      message
+    }
+  }
+`, () => ({
+  variables: {
+    email: user.value.email,
+    password: user.value.password
   },
-});
+}))
 
-function login() {
-  const loginMutation = `mutation ($email: String!, $password: String!) { login(email: $email, password: $password) { jti expiredTime } }`;
-  const variables = { email: user.value.email, password: user.value.password }
-  const requestContent = {  query: loginMutation, variables: variables };
-  api.post("graphql", requestContent).then((res) => {
-    console.log(res)
-    if(res.data.errors) {
-      console.log('error')
-    } else {
-      console.log('success')
-      console.log(res.data.data.login)
-      const { jti, expired_time } = res.data.data.login
+const { mutate: sendResetPasswordEmail } = useMutation(gql`
+  mutation sendResetPasswordEmail ($email: String!) {
+    sendResetPasswordEmail (input: { email: $email}) {
+      user { id }
+      success
+      message
+    }
+  }`)
+
+function mutationLogin(){
+  login().then(result => {
+    if(result.data.login.success) {
+      const jti = result.data.login.user.jti
+      const expired_time = result.data.login.expiredTime
       document.cookie = `token=${jti}; expires=${new Date(expired_time)}`;
       router.push('/')
+    } else {
+      alert(result.data.login.message)
     }
+  });
+}
+
+function mutationSendResetPasswordEmail(email) {
+  console.log(email)
+  sendResetPasswordEmail({ email: email }).then(result => {
+    close()
+    console.log(result.data)
   })
 }
 
@@ -131,24 +153,6 @@ function open(){
 
 function close(){
   resetModal.value.modal.hide()
-}
-
-function sendResetPasswordEmail(email){
-  // console.log(email)
-  const sendResetPasswordEmailMutation = `mutation ($email: String!) { sendResetPasswordEmail(email: $email) { email } }`;
-  const variables = { email: email }
-  const requestContent = { query: sendResetPasswordEmailMutation, variables: variables }
-  
-  console.log('email:', email)
-  close()
-  api.post("graphql", requestContent).then((res) => {
-    console.log(res)
-    if(res.data.errors) {
-      console.log('error')
-    } else {
-      console.log('success')
-    }
-  })
 }
 
 onMounted(() => {

@@ -18,7 +18,7 @@
         <div class="row d-flex justify-content-center">
           <div class="col-lg-8">
             <h2 class="fw-bold mb-5">註冊</h2>
-            <form @submit.prevent="sign_up">
+            <form @submit.prevent="mutationSignUp">
               <!-- 2 column grid layout with text inputs for the first and last names -->
               <div class="d-flex justify-content-center">
                 <div class="mb-5 col-md-6">
@@ -57,7 +57,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from "axios";
+import { useMutation } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
 import router from '../router';
 
 const user = ref({
@@ -66,26 +67,30 @@ const user = ref({
   password: '',
 })
 
-function sign_up() {
-  const api = axios.create({
-    baseURL: import.meta.env.VITE_VUE_API,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      Accept: "application/json",
-    },
-  });
-
-  const signUpmutation = `mutation ($name: String!, $email: String!, $password: String!) { signUp(name: $name, email: $email, password: $password ) { id } }`
-  const variables = { name: user.value.name, email: user.value.email, password: user.value.password }
-  const requestContent = { query: signUpmutation, variables: variables }
-
-  api.post("graphql", requestContent).then((res) => {
-    if(res.data.errors) {
-      console.log('error')
-    } else {
-      router.push('/login')
+const { mutate: signUp } = useMutation(gql`
+  mutation signUp ($name: String!, $email: String!, $password: String!) {
+    signUp (input: {name: $name, email: $email, password: $password }) {
+      user { id }
+      success
+      message
     }
-  })
+  }
+`, () => ({
+  variables: {
+    name: user.value.name,
+    email: user.value.email,
+    password: user.value.password
+  },
+}))
+
+function mutationSignUp(){
+  signUp().then(result => {
+    if(result.data.signUp.success) {
+      router.push('/login')
+    } else {
+      alert(result.data.signUp.message)
+    }
+  });
 }
 
 </script>
