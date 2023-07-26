@@ -1,8 +1,9 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router'
+import { useMutation } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
 import router from '../router';
-import axios from "axios";
 
 const password = ref('')
 const passwordConfirmation = ref('')
@@ -11,13 +12,21 @@ const passowrdConfirmationText = ref('')
 const isButtonDisabled = ref(true)
 const route = useRoute()
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_VUE_API,
-  headers: {
-    "Content-Type": "application/json; charset=utf-8",
-    Accept: "application/json",
+const { mutate: resetPassword } = useMutation(gql`
+  mutation resetPassword ($token: String!, $password: String!, $passwordConfirmation: String!) {
+    resetPassword (input: {token: $token, password: $password, passwordConfirmation: $passwordConfirmation }) {
+      user { id }
+      success
+      message
+    }
+  }
+`, () => ({
+  variables: {
+    token: route.query.token,
+    password: password.value,
+    passwordConfirmation: passwordConfirmation.value
   },
-});
+}))
 
 watch([password, passwordConfirmation], (newValue) => {
   let passwordValue = newValue[0]
@@ -38,10 +47,11 @@ watch([password, passwordConfirmation], (newValue) => {
 })
 
 function reset() {
-  api.post("api/v1/users/reset_password", { data: { token: route.query.token, password: password.value, password_confirmation: passwordConfirmation.value } }).then((res) => {
-    if(res.data.success){
-      console.log(res)
+  resetPassword().then((result) => {
+    if(result.data.resetPassword.success) {
       router.push('/login')
+    } else {
+      alert(result.data.resetPassword.message)
     }
   })
 }

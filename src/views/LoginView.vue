@@ -140,9 +140,8 @@ function mutationLogin(){
 }
 
 function mutationSendResetPasswordEmail(email) {
-  console.log(email)
+  close()
   sendResetPasswordEmail({ email: email }).then(result => {
-    close()
     console.log(result.data)
   })
 }
