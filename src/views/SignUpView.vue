@@ -58,6 +58,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 import gql from 'graphql-tag'
 import router from '../router';
 
@@ -88,7 +90,7 @@ function mutationSignUp(){
     if(result.data.signUp.success) {
       router.push('/login')
     } else {
-      alert(result.data.signUp.message)
+      toast.error(result.data.signUp.message, { autoClose: 3000 })
     }
   });
 }

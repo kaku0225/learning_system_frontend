@@ -87,8 +87,10 @@ a {
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 import gql from 'graphql-tag'
-import router from '../router';
+import router from '../router'
 import Modal from 'bootstrap/js/dist/modal'
 
 import SendResetMailModal from '../components/SendResetMailModal.vue'
@@ -134,7 +136,7 @@ function mutationLogin(){
       document.cookie = `token=${jti}; expires=${new Date(expired_time)}`;
       router.push('/')
     } else {
-      alert(result.data.login.message)
+      toast.error(result.data.login.message, { autoClose: 3000 })
     }
   });
 }
@@ -142,7 +144,9 @@ function mutationLogin(){
 function mutationSendResetPasswordEmail(email) {
   close()
   sendResetPasswordEmail({ email: email }).then(result => {
-    console.log(result.data)
+    if(!result.data.sendResetPasswordEmail.success) {
+      toast.error(result.data.sendResetPasswordEmail.message, { autoClose: 3000 })
+    }
   })
 }
 

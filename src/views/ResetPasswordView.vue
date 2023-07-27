@@ -2,6 +2,8 @@
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router'
 import { useMutation } from '@vue/apollo-composable'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 import gql from 'graphql-tag'
 import router from '../router';
 
@@ -51,7 +53,7 @@ function reset() {
     if(result.data.resetPassword.success) {
       router.push('/login')
     } else {
-      alert(result.data.resetPassword.message)
+      toast.error(result.data.resetPassword.message, { autoClose: 3000 })
     }
   })
 }
