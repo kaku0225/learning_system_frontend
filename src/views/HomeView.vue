@@ -1,17 +1,12 @@
 <script setup>
-  import PieChart from '../components/PieChartView.vue'
   import ExamCountDown from '../components/ExamCountDownView.vue'
+  import Rank from '../components/RankView.vue'
 </script>
 
 <template>
-  <div class="d-flex justify-content-around">
-    <div style="height: 400px; width: 400px;">
-      <PieChart></PieChart>
-    </div>
-    <div>
-      <ExamCountDown></ExamCountDown>
-    </div>
-  </div>
+  <ExamCountDown></ExamCountDown>
+  <br>
+  <Rank></Rank>
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col">
       <div class="card h-100">
