@@ -1,12 +1,34 @@
 <script setup>
+import { ref, watchEffect } from 'vue'
+import { useQuery } from '@vue/apollo-composable';
 import VueCountdown from '@chenfengyuan/vue-countdown';
+import gql from 'graphql-tag'
+const s_exam = ref(0)
+const c_exam = ref(0)
+
+const { result } = useQuery(gql`
+  query {
+    examCountdown {
+      sectionalExam
+      comprehensiveAssessmentProgram
+    }
+  }
+`);
+
+watchEffect(() => {
+  if (result.value) {
+    s_exam.value = parseInt(result.value.examCountdown.sectionalExam)
+    c_exam.value = parseInt(result.value.examCountdown.comprehensiveAssessmentProgram)
+  }
+});
+
 </script>
 
 <template>
   <div class="d-flex justify-content-around">
     <div class="card" style="margin-right: 5px">
       <div class="card-body">
-        <vue-countdown :time="2 * 24 * 60 * 60 * 1000" v-slot="{ days, hours, minutes }">
+        <vue-countdown :time="s_exam" v-slot="{ days, hours, minutes, seconds }">
           <div class="main">
             <h4>距離第二次段考倒數</h4>
             <div class="countdown">
@@ -31,6 +53,13 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
                 </div>
                 <span>Minutes</span>
               </div>
+              <div>
+                <span class="number seconds"></span>
+                <div>
+                  <h3>{{ seconds }}</h3>
+                </div>
+                <span>seconds</span>
+              </div>
             </div>
           </div>
         </vue-countdown>
@@ -43,7 +72,7 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
     </div>
     <div class="card" style="margin-left: 5px">
       <div class="card-body">
-        <vue-countdown :time="2 * 24 * 60 * 60 * 1000" v-slot="{ days, hours, minutes }">
+        <vue-countdown :time="c_exam" v-slot="{ days, hours, minutes, seconds }">
           <div class="main">
             <h4>距離會考</h4>
             <div class="countdown">
@@ -67,6 +96,13 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
                   <h3>{{ minutes }}</h3>
                 </div>
                 <span>Minutes</span>
+              </div>
+              <div>
+                <span class="number seconds"></span>
+                <div>
+                  <h3>{{ seconds }}</h3>
+                </div>
+                <span>seconds</span>
               </div>
             </div>
           </div>
@@ -94,8 +130,6 @@ h4{
   justify-content: center;
   gap: 20px;
 }
-
-
   
 .countdown > div{
   display: flex;
@@ -119,12 +153,8 @@ div span:last-of-type{
   font-size: 12px;
 }
 
-
-
-
-
 @media screen and (max-width:600px){
-  h1{
+  h4{
     font-size: 40px;
   }
   
