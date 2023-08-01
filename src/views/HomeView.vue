@@ -20,42 +20,53 @@
   const title = ref('')
   const content = ref('')
 
-  // pending todo lists
-  const { result: pendingResult } = useQuery(gql`
-      query TodoList($token: String!, $status: String!) {
-        todoList(token: $token, status: $status) {
-          title
-          content
-          createdAt
+  function fetchDoneList() {
+    const { result } = useQuery(
+      gql`
+        query TodoList($token: String!, $status: String!) {
+          todoList(token: $token, status: $status) {
+            title
+            content
+            createdAt
+          }
         }
+      `,
+      {
+        token: token,
+        status: 'done',
       }
-    `, { token: token, status: 'pending' });
+    );
+    watchEffect(() => {
+      if (result.value) {
+        DoneTodoLists.value = result.value.todoList;
+      }
+    })
+  }
 
-  watchEffect(() => {
-    if (pendingResult.value) {
-      PendingTodoLists.value = pendingResult.value.todoList
-    }
-  });
-
-  // done todo lists
-  const { result: doneResult } = useQuery(gql`
-      query TodoList($token: String!, $status: String!) {
-        todoList(token: $token, status: $status) {
-          title
-          content
-          createdAt
+  function fetchPendingList() {
+    const { result } = useQuery(
+      gql`
+        query TodoList($token: String!, $status: String!) {
+          todoList(token: $token, status: $status) {
+            title
+            content
+            createdAt
+          }
         }
+      `,
+      {
+        token: token,
+        status: 'pending',
       }
-    `, { token: token, status: 'done' });
-
-  watchEffect(() => {
-    if (doneResult.value) {
-      DoneTodoLists.value = doneResult.value.todoList
-    }
-  });
+    );
+    watchEffect(() => {
+      if (result.value) {
+        PendingTodoLists.value = result.value.todoList;
+      }
+    })
+  }
 
   const TodoListContentModal = ref({modal: null})
-  
 
   const TodoListModal = ref({ modal: null })
 
@@ -84,6 +95,8 @@
   onMounted(() => {
     TodoListModal.value.modal = new Modal('#todoListModal', {})
     TodoListContentModal.value.modal = new Modal('#todoListMessageModal', {})
+    fetchPendingList()
+    fetchDoneList()
   })
 </script>
 

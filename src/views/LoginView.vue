@@ -92,7 +92,6 @@ import 'vue3-toastify/dist/index.css'
 import gql from 'graphql-tag'
 import router from '../router'
 import Modal from 'bootstrap/js/dist/modal'
-
 import SendResetMailModal from '../components/SendResetMailModal.vue'
 
 
@@ -161,5 +160,4 @@ function close(){
 onMounted(() => {
   resetModal.value.modal = new Modal('#resetModal', {})
 })
-
 </script>

@@ -1,8 +1,38 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useMenuStore } from '@/stores/menu'
+import { useMutation } from '@vue/apollo-composable'
+import router from '../router'
+import gql from 'graphql-tag'
 
 const { stretched } = storeToRefs(useMenuStore())
+
+const cookieValue = document.cookie
+    .split(';')
+    .map((cookie) => cookie.trim())
+    .find((cookie) => cookie.startsWith('token='));
+
+const token = cookieValue ? cookieValue.split('=')[1] : null;
+
+const { mutate: logout } = useMutation(gql`
+  mutation logout ($token: String!) {
+    logout (input: {token: $token }) {
+      expiredTime
+    }
+  }
+`, () => ({
+  variables: {
+    token: token,
+  },
+}))
+
+function mutationLogout(){
+  logout().then(result => {
+    router.push('/login')
+    const expired_time = result.data.logout.expiredTime
+    document.cookie = `token=null; expires=${new Date(expired_time)}`;
+  });
+}
 
 </script>
 
@@ -40,6 +70,9 @@ const { stretched } = storeToRefs(useMenuStore())
       </li>
       <li>
         <a href="#">Contact</a>
+      </li>
+      <li>
+        <a href="#" @click="mutationLogout">登出</a>
       </li>
     </ul>
     <ul class="list-unstyled CTAs">

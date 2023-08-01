@@ -9,7 +9,6 @@ const router = useRouter();
 
 watchEffect(() => {
   const currentPath = window.location.href;
-  console.log(currentPath)
   showSidebar.value = !currentPath.includes('login') && !currentPath.includes('sign_up') && !currentPath.includes('reset_password')
 });
 
