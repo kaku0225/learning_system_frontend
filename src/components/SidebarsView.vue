@@ -47,7 +47,8 @@ function mutationLogout(){
         <a href="#homeSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">訂位系統</a>
         <ul class="collapse list-unstyled" id="homeSubmenu">
           <li>
-            <a href="#">新增訂位</a>
+            <router-link to="/booking">新增訂位</router-link>
+            <!-- <a href="#">新增訂位</a> -->
           </li>
           <li>
             <a href="#">查詢訂位</a>
