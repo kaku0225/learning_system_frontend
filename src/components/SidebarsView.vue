@@ -51,7 +51,8 @@ function mutationLogout(){
             <!-- <a href="#">新增訂位</a> -->
           </li>
           <li>
-            <a href="#">查詢訂位</a>
+            <router-link to="/booking_search">查詢訂位</router-link>
+            <!-- <a href="#">查詢訂位</a> -->
           </li>
         </ul>
       </li>
