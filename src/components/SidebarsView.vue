@@ -63,7 +63,7 @@ function mutationLogout(){
         <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">待辦作業</a>
         <ul class="collapse list-unstyled" id="pageSubmenu">
           <li>
-            <a href="#">作業檢視</a>
+            <router-link to="/assignment_review">作業檢視</router-link>
           </li>
         </ul>
       </li>
