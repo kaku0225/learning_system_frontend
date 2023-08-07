@@ -68,7 +68,8 @@ function mutationLogout(){
         </ul>
       </li>
       <li>
-        <a href="#">學習記錄</a>
+        <router-link to="/learning_record">學習記錄</router-link>
+        <!-- <a href="#">學習記錄</a> -->
       </li>
       <li>
         <a href="#">Contact</a>

@@ -162,9 +162,7 @@
     </div>
     <div class="col">
       <div class="card">
-        <div style="height: 243px">
-          <img style="height: 100%" src="https://plus.unsplash.com/premium_photo-1682309567426-5517a398b4dd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1812&q=80" class="card-img-top" alt="Palm Springs Road"/>
-        </div>
+        <img src="https://plus.unsplash.com/premium_photo-1682309567426-5517a398b4dd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1812&q=80" class="card-img-top" alt="Palm Springs Road"/>
         <div class="card-body">
           <h5 class="card-title">通知</h5>
           <div class="list-group list-group-flush">

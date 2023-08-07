@@ -6,6 +6,7 @@ import ResetPasswordView from '../views/ResetPasswordView.vue'
 import BookingView from '../views/BookingView.vue'
 import BookingSearchView from '../views/BookingSearchView.vue'
 import AssignmentReview from '../views/AssignmentReview.vue'
+import LearningRecord from '../views/LearningRecord.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/assignment_review',
       name: 'assignment_review',
       component: AssignmentReview
+    },
+    {
+      path: '/learning_record',
+      name: 'learning_record',
+      component: LearningRecord
     }
     // {
       // path: '/about',
