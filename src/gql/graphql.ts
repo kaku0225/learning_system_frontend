@@ -78,8 +78,6 @@ export type LogoutMutationPayload = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']['output']>;
   expiredTime?: Maybe<Scalars['ISO8601DateTime']['output']>;
-  success: Scalars['Boolean']['output'];
-  user?: Maybe<User>;
 };
 
 export type Mutation = {
@@ -124,8 +122,14 @@ export type MutationSignUpArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  checkLogin: Scalars['Boolean']['output'];
   examCountdown: ExamCountdown;
   todoList: Array<TodoList>;
+};
+
+
+export type QueryCheckLoginArgs = {
+  token: Scalars['String']['input'];
 };
 
 
@@ -290,8 +294,6 @@ export type LogoutMutationPayload = {
   /** A unique identifier for the client performing the mutation. */
   clientMutationId?: Maybe<Scalars['String']['output']>;
   expiredTime?: Maybe<Scalars['ISO8601DateTime']['output']>;
-  success: Scalars['Boolean']['output'];
-  user?: Maybe<User>;
 };
 
 export type Mutation = {
@@ -336,8 +338,14 @@ export type MutationSignUpArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  checkLogin: Scalars['Boolean']['output'];
   examCountdown: ExamCountdown;
   todoList: Array<TodoList>;
+};
+
+
+export type QueryCheckLoginArgs = {
+  token: Scalars['String']['input'];
 };
 
 
