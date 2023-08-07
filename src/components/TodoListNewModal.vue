@@ -8,12 +8,9 @@ const todoList = ref({
     title: '',
     content: ''
   })
-const cookieValue = document.cookie
-    .split(';')
-    .map((cookie) => cookie.trim())
-    .find((cookie) => cookie.startsWith('token='));
 
-const token = cookieValue ? cookieValue.split('=')[1] : null;
+const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
 const { mutate: create } = useMutation(gql`
   mutation create ($token: String!, $title: String!, $content: String!) {
     create (input: {token: $token, title: $title, content: $content }) {

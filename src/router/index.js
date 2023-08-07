@@ -1,4 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+import WithNavLayout from '../layouts/WithNav.vue'
+import WithoutNavLayout from '../layouts/WithoutNav.vue'
+
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import HomeView from '../views/HomeView.vue'
@@ -14,41 +18,49 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      meta: { layout: WithNavLayout },
       component: HomeView
     },
     {
       path: '/sign_up',
       name: 'sing_up',
+      meta: { layout: WithoutNavLayout },
       component: SignUpView
     },
     {
       path: '/login',
       name: 'login',
+      meta: { layout: WithoutNavLayout },
       component: LoginView
     },
     {
       path: '/reset_password',
       name: 'reset_password',
+      meta: { layout: WithoutNavLayout },
       component: ResetPasswordView
     },
     {
       path: '/booking',
       name: 'booking',
+      meta: { layout: WithNavLayout },
       component: BookingView
     },
     {
       path: '/booking_search',
       name: 'booking_search',
+      meta: { layout: WithNavLayout },
       component: BookingSearchView
     },
     {
       path: '/assignment_review',
       name: 'assignment_review',
+      meta: { layout: WithNavLayout },
       component: AssignmentReview
     },
     {
       path: '/learning_record',
       name: 'learning_record',
+      meta: { layout: WithNavLayout },
       component: LearningRecord
     }
     // {
