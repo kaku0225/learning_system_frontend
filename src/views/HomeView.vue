@@ -15,48 +15,32 @@
   const title = ref('')
   const content = ref('')
 
-  function fetchDoneList() {
+  function fetchTodoListByStatus() {
     const { result } = useQuery(
       gql`
-        query TodoList($token: String!, $status: String!) {
-          todoList(token: $token, status: $status) {
-            title
-            content
-            createdAt
+        query TodoListByStatus($token: String!) {
+          todoListByStatus(token: $token) {
+            pendingTodoLists {
+              title
+              content
+              createdAt
+            }
+            doneTodoLists {
+              title
+              content
+              createdAt
+            }
           }
         }
       `,
       {
         token: token,
-        status: 'done',
       }
     );
     watchEffect(() => {
       if (result.value) {
-        DoneTodoLists.value = result.value.todoList;
-      }
-    })
-  }
-
-  function fetchPendingList() {
-    const { result } = useQuery(
-      gql`
-        query TodoList($token: String!, $status: String!) {
-          todoList(token: $token, status: $status) {
-            title
-            content
-            createdAt
-          }
-        }
-      `,
-      {
-        token: token,
-        status: 'pending',
-      }
-    );
-    watchEffect(() => {
-      if (result.value) {
-        PendingTodoLists.value = result.value.todoList;
+        PendingTodoLists.value = result.value.todoListByStatus.pendingTodoLists;
+        DoneTodoLists.value = result.value.todoListByStatus.doneTodoLists;
       }
     })
   }
@@ -90,8 +74,7 @@
   onMounted(() => {
     TodoListModal.value.modal = new Modal('#todoListModal', {})
     TodoListContentModal.value.modal = new Modal('#todoListMessageModal', {})
-    fetchPendingList()
-    fetchDoneList()
+    fetchTodoListByStatus()
   })
 </script>
 

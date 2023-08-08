@@ -124,7 +124,7 @@ export type Query = {
   __typename?: 'Query';
   checkLogin: Scalars['Boolean']['output'];
   examCountdown: ExamCountdown;
-  todoList: Array<TodoList>;
+  todoListByStatus: TodoListByStatus;
 };
 
 
@@ -133,8 +133,7 @@ export type QueryCheckLoginArgs = {
 };
 
 
-export type QueryTodoListArgs = {
-  status: Scalars['String']['input'];
+export type QueryTodoListByStatusArgs = {
   token: Scalars['String']['input'];
 };
 
@@ -202,6 +201,12 @@ export type TodoList = {
   status: TodoListStatus;
   title: Scalars['String']['output'];
   updatedAt: Scalars['ISO8601DateTime']['output'];
+};
+
+export type TodoListByStatus = {
+  __typename?: 'TodoListByStatus';
+  doneTodoLists: Array<TodoList>;
+  pendingTodoLists: Array<TodoList>;
 };
 
 export enum TodoListStatus {
@@ -340,7 +345,7 @@ export type Query = {
   __typename?: 'Query';
   checkLogin: Scalars['Boolean']['output'];
   examCountdown: ExamCountdown;
-  todoList: Array<TodoList>;
+  todoListByStatus: TodoListByStatus;
 };
 
 
@@ -349,8 +354,7 @@ export type QueryCheckLoginArgs = {
 };
 
 
-export type QueryTodoListArgs = {
-  status: Scalars['String']['input'];
+export type QueryTodoListByStatusArgs = {
   token: Scalars['String']['input'];
 };
 
@@ -418,6 +422,12 @@ export type TodoList = {
   status: TodoListStatus;
   title: Scalars['String']['output'];
   updatedAt: Scalars['ISO8601DateTime']['output'];
+};
+
+export type TodoListByStatus = {
+  __typename?: 'TodoListByStatus';
+  doneTodoLists: Array<TodoList>;
+  pendingTodoLists: Array<TodoList>;
 };
 
 export enum TodoListStatus {
