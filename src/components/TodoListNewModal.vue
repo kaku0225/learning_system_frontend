@@ -35,6 +35,8 @@ function close(){
 function mutationCreate(){
   create().then(result => {
     close()
+    todoList.value.title = ''
+    todoList.value.content = ''
     emits('todoLists', result.data.create.todoList)
   });
 }
