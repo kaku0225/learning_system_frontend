@@ -68,7 +68,9 @@ function reset() {
           <div class="col-12 col-md-9 col-lg-7 col-xl-5">
             <div class="card bg-opacity-10 shadow-lg p-3 mb-5 bg-white rounded" style="border-radius: 15px;">
               <div class="card-body p-5">
-                <h2 class="text-uppercase text-center mb-5">密碼重置</h2>
+                <h2 class="text-uppercase text-center mb-4">密碼重置</h2>
+                <div id="emailHelp" class="form-text text-center">密碼大於等於8個字元、包含一個數字</div>
+                <div id="emailHelp" class="form-text text-center">包含一個大寫英文、包含一個小寫英文</div>
                 <form @submit.prevent="reset">
                   <div class="d-flex justify-content-center">
                     <div class="form-floating mb-4 col-md-8">
