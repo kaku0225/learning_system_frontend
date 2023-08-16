@@ -43,16 +43,19 @@ function mutationLogout(){
 function checkLogin() {
   const { result } = useQuery(
     gql`
-      query CheckLogin($token: String!) {
-        checkLogin(token: $token)
+      query CheckLogin($token: String!, $role: String!) {
+        checkLogin(token: $token, role: $role){
+          success
+        }
       }
     `,
     {
       token: token,
+      role: 'Student'
     }
   );
   watchEffect(() => {
-    if (result.value && result.value.checkLogin === false) {
+    if (result.value && result.value.checkLogin.success === false) {
       router.push('/login')
     }
   })
@@ -76,9 +79,6 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>
 
 <style scoped>
 

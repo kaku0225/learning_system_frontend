@@ -106,7 +106,7 @@ const resetModal = ref({ modal: null })
 const { mutate: login } = useMutation(gql`
   mutation login ($email: String!, $password: String!) {
     login (input: {email: $email, password: $password }) {
-      user { jti }
+      user { jti type }
       success
       expiredTime
       message
@@ -134,7 +134,11 @@ function mutationLogin(){
       const jti = result.data.login.user.jti
       const expired_time = result.data.login.expiredTime
       document.cookie = `token=${jti}; expires=${new Date(expired_time)}`;
-      router.push('/')
+      if(result.data.login.user.type === 'Student') {
+        router.push('/')
+      } else {
+        router.push('/back_interface')
+      }
     } else {
       toast.error(result.data.login.message, { autoClose: 3000 })
     }
@@ -153,17 +157,25 @@ function mutationSendResetPasswordEmail(email) {
 function checkLogin() {
   const { result } = useQuery(
     gql`
-      query CheckLogin($token: String!) {
-        checkLogin(token: $token)
+      query CheckLogin($token: String!, $role: String!) {
+        checkLogin(token: $token, role: $role){
+          success
+          role
+        }
       }
     `,
     {
       token: token,
+      role: 'User'
     }
   );
   watchEffect(() => {
-    if (result.value && result.value.checkLogin === true) {
-      router.push('/')
+    if (result.value && result.value.checkLogin.success === true) {
+      if(result.value.checkLogin.role === 'Student') {
+        router.push('/')
+      } else {
+        router.push('/back_interface')
+      }
     }
   })
 }
