@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
-const emits = defineEmits(['closeTodoModal'])
+const emits = defineEmits(['closeTodoModal', 'todoLists'])
 const todoList = ref({
     title: '',
     content: ''
