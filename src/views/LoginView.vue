@@ -160,7 +160,7 @@ function checkLogin() {
       query CheckLogin($token: String!, $role: String!) {
         checkLogin(token: $token, role: $role){
           success
-          role
+          path
         }
       }
     `,
@@ -171,11 +171,7 @@ function checkLogin() {
   );
   watchEffect(() => {
     if (result.value && result.value.checkLogin.success === true) {
-      if(result.value.checkLogin.role === 'Student') {
-        router.push('/')
-      } else {
-        router.push('/back_interface')
-      }
+      router.push(`${result.value.checkLogin.path}`)
     }
   })
 }

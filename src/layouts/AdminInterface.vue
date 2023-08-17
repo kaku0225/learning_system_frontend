@@ -47,6 +47,7 @@ function checkLogin() {
       query CheckLogin($token: String!, $role: String!) {
         checkLogin(token: $token, role: $role){
           success
+          path
         }
       }
     `,
@@ -56,8 +57,12 @@ function checkLogin() {
     }
   );
   watchEffect(() => {
-    if (result.value && result.value.checkLogin.success === false) {
-      router.push('/login')
+    if(result.value){
+      if(result.value.checkLogin.success === false) {
+        router.push('/login')
+      } else if(result.value.checkLogin.path) {
+        router.push(`${result.value.checkLogin.path}`)
+      }
     }
   })
 }
