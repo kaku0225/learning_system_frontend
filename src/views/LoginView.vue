@@ -133,7 +133,7 @@ function mutationLogin(){
     if(result.data.login.success) {
       const jti = result.data.login.user.jti
       const expired_time = result.data.login.expiredTime
-      document.cookie = `token=${jti}; expires=${new Date(expired_time)}`;
+      document.cookie = `token=${jti}; expires=${new Date(expired_time)}; path=/`;
       if(result.data.login.user.type === 'Student') {
         router.push('/')
       } else {

@@ -21,14 +21,14 @@ function mutationLogout(){
   logout().then(result => {
     router.push('/login')
     const expired_time = result.data.logout.expiredTime
-    document.cookie = `token=null; expires=${new Date(expired_time)}`;
+    document.cookie = `token=null; expires=${new Date(expired_time)}; path=/`;
   });
 }
 
 </script>
 
 <template>  
-  <nav id="sidebar" class="bg-body-secondary" :class="{ active: stretched }">
+  <nav id="sidebar" class="bg-body-secondary">
     <div class="sidebar-header bg-body-secondary">
       <h3>管理員</h3>
     </div>
@@ -38,8 +38,7 @@ function mutationLogout(){
         <a href="#homeSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">帳號管理</a>
         <ul class="collapse list-unstyled" id="homeSubmenu">
           <li>
-            <router-link to="/booking">帳號列表</router-link>
-            <!-- <a href="#">新增訂位</a> -->
+            <router-link to="/admin_interface/account_management">帳號列表</router-link>
           </li>
         </ul>
       </li>

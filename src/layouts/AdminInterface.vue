@@ -36,7 +36,7 @@ function mutationLogout(){
     window.removeEventListener('mousemove', handleUserActivity);
     window.removeEventListener('keydown', handleUserActivity);
     const expired_time = result.data.logout.expiredTime
-    document.cookie = `token=null; expires=${new Date(expired_time)}`;
+    document.cookie = `token=null; expires=${new Date(expired_time)}; path=/`;
     router.push('/login')
   });
 }

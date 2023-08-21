@@ -14,6 +14,7 @@ import AssignmentReview from '../views/AssignmentReview.vue'
 import LearningRecord from '../views/LearningRecord.vue'
 
 import AdminHomeView from '../views/AdminHomeView.vue'
+import AccountManagement from '../views/AccountManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,12 @@ const router = createRouter({
       name: 'admin_interface',
       meta: { layout: AdminInterface },
       component: AdminHomeView,
+    },
+    {
+      path: '/admin_interface/account_management',
+      name: 'account_management',
+      meta: { layout: AdminInterface },
+      component: AccountManagement
     }
     // {
       // path: '/about',
