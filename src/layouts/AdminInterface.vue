@@ -1,6 +1,6 @@
 <script setup>
 
-import Sidebar from '../components/SidebarsView.vue'
+import AdminSidebar from '../components/AdminSidebarsView.vue'
 import { watchEffect, onMounted } from 'vue'
 import { useMutation, useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag'
@@ -78,7 +78,7 @@ onMounted(() => {
 
 <template>
   <div class="wrapper">
-    <Sidebar />
+    <AdminSidebar />
     <div id="content">
       <RouterView />
     </div>
