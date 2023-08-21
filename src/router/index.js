@@ -67,10 +67,10 @@ const router = createRouter({
       component: LearningRecord
     },
     {
-      path: '/back_interface',
-      name: 'back_interface',
+      path: '/admin_interface',
+      name: 'admin_interface',
       meta: { layout: AdminInterface },
-      component: AdminHomeView
+      component: AdminHomeView,
     }
     // {
       // path: '/about',

@@ -137,7 +137,7 @@ function mutationLogin(){
       if(result.data.login.user.type === 'Student') {
         router.push('/')
       } else {
-        router.push('/back_interface')
+        router.push('/admin_interface')
       }
     } else {
       toast.error(result.data.login.message, { autoClose: 3000 })
