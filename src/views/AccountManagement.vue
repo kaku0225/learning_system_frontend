@@ -1,4 +1,18 @@
-<script setup></script>
+<script setup>
+  import { ref, onMounted } from 'vue';
+  import Modal from 'bootstrap/js/dist/modal'
+  import ClassAdviserNewModal from '../components/ClassAdviserNewModal.vue'
+
+  const ClassAdviserModal = ref({ modal: null })
+
+  function open() {
+    ClassAdviserModal.value.modal.show()
+  }
+
+  onMounted(() => {
+    ClassAdviserModal.value.modal = new Modal('#ClassAdviserModal', {})
+  })
+</script>
 
 <template>
   <h2>帳號管理</h2>
@@ -7,7 +21,7 @@
     <!-- class home work -->
     <div class="tab-pane fade show active" id="class-home-work" role="tabpanel" aria-labelledby="class-home-work-tab">
       <br>
-      <button type="button" class="btn btn-primary">新增帳號</button>
+      <button type="button" class="btn btn-primary" @click="open">新增帳號</button>
       <table class="table table-bordered" style="margin-top: 30px">
         <thead>
           <tr>
@@ -43,4 +57,5 @@
       </nav>
     </div>
   </div>
+  <ClassAdviserNewModal ref="ClassAdviserModal"></ClassAdviserNewModal>
 </template>
