@@ -174,9 +174,9 @@ const hideGradeSubSelect = ref({
   senior: true
 })
 
-const { mutate: signUp } = useMutation(gql`
-  mutation signUp ($name: String!, $email: String!, $password: String!, $passwordConfirmation: String!, $birthday: String!, $cellphone: String!, $phone: String!, $school: String!, $mainGrade: String!, $subGrade: String!, $county: String!, $address: String!, $branchSchool: String!) {
-    signUp (input: {name: $name, email: $email, password: $password, passwordConfirmation: $passwordConfirmation, birthday: $birthday, cellphone: $cellphone, phone: $phone, school: $school, mainGrade: $mainGrade, subGrade: $subGrade, county: $county, address: $address, branchSchool: $branchSchool }) {
+const { mutate: studentSignUp } = useMutation(gql`
+  mutation studentSignUp ($name: String!, $email: String!, $password: String!, $passwordConfirmation: String!, $birthday: String!, $cellphone: String!, $phone: String!, $school: String!, $mainGrade: String!, $subGrade: String!, $county: String!, $address: String!, $branchSchool: String!) {
+    studentSignUp (input: {name: $name, email: $email, password: $password, passwordConfirmation: $passwordConfirmation, birthday: $birthday, cellphone: $cellphone, phone: $phone, school: $school, mainGrade: $mainGrade, subGrade: $subGrade, county: $county, address: $address, branchSchool: $branchSchool }) {
       student { id }
       success
       message
@@ -215,13 +215,11 @@ function switchSubSelect(value) {
 }
 
 function mutationSignUp(){
-  signUp().then(result => {
-    if(result.data.signUp.success) {
-      console.log('111')
+  studentSignUp().then(result => {
+    if(result.data.studentSignUp.success) {
       router.push('/login')
     } else {
-      console.log('222')
-      toast.error(result.data.signUp.message, { autoClose: 3000 })
+      toast.error(result.data.studentSignUp.message, { autoClose: 3000 })
     }
   });
 }

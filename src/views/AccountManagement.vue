@@ -1,16 +1,45 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, watchEffect } from 'vue';
+  import { useQuery } from '@vue/apollo-composable';
   import Modal from 'bootstrap/js/dist/modal'
   import ClassAdviserNewModal from '../components/ClassAdviserNewModal.vue'
+  import gql from 'graphql-tag'
+
+  const classAdvisers = ref([])
 
   const ClassAdviserModal = ref({ modal: null })
+
+  function fetchClassAdvisers() {
+    const { result } = useQuery(gql`
+        query {
+          classAdvisers {
+            email
+            name
+            profile {
+              cellphone
+            }
+          }
+        }
+      `);
+    watchEffect(() => {
+      if (result.value) {
+        classAdvisers.value = result.value.classAdvisers;
+      }
+    })
+  }
 
   function open() {
     ClassAdviserModal.value.modal.show()
   }
 
+  function updateCurrentClassAdvisers(updatedClassAdvisers){
+    classAdvisers.value = updatedClassAdvisers
+    ClassAdviserModal.value.modal.hide()
+  }
+
   onMounted(() => {
     ClassAdviserModal.value.modal = new Modal('#ClassAdviserModal', {})
+    fetchClassAdvisers()
   })
 </script>
 
@@ -31,11 +60,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>abc12345</td>
-            <td>阿中</td>
-            <td>09123456789</td>
-          </tr>
+          <template v-for="(classAdviser, index) in classAdvisers" :key="index">
+            <tr>
+              <td>{{ classAdviser.email }}</td>
+              <td>{{ classAdviser.name }}</td>
+              <td>{{ classAdviser.profile.cellphone }}</td>
+            </tr>
+          </template>
         </tbody>
       </table>
       <nav aria-label="...">
@@ -57,5 +88,5 @@
       </nav>
     </div>
   </div>
-  <ClassAdviserNewModal ref="ClassAdviserModal"></ClassAdviserNewModal>
+  <ClassAdviserNewModal ref="ClassAdviserModal" @updateClassAdvisers="updateCurrentClassAdvisers"></ClassAdviserNewModal>
 </template>
