@@ -11,41 +11,41 @@
                 <form class="row g-3" @submit.prevent="mutationSignUp">
                   <div class="d-flex justify-content-center justify-content-around flex-wrap">
                     <div class="col-md-5 form-floating">
-                      <input type="text" class="form-control" id="inputName" placeholder="姓名" v-model="student.name">
+                      <input type="text" class="form-control" id="inputName" placeholder="姓名" v-model="student.info.name">
                       <label for="inputName" class="form-label">姓名</label>
                     </div>
                     <div class="col-md-5 form-floating">
-                      <input type="email" class="form-control" id="inputEmail" placeholder="email" v-model="student.email">
+                      <input type="email" class="form-control" id="inputEmail" placeholder="email" v-model="student.info.email">
                       <label for="inputEmail" class="form-label">email</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="password" class="form-control" id="inputPassword" placeholder="密碼" v-model="student.password">
+                      <input type="password" class="form-control" id="inputPassword" placeholder="密碼" v-model="student.info.password">
                       <label for="inputPassword" class="form-label">密碼</label>
                       <div id="emailHelp" class="form-text">大於等於8個字元、包含一個數字</div>
                       <div id="emailHelp" class="form-text">包含一個大寫英文、包含一個小寫英文</div>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="password" class="form-control" id="inputPasswordConfirmation" placeholder="再次確認密碼" v-model="student.passwordConfirmation">
+                      <input type="password" class="form-control" id="inputPasswordConfirmation" placeholder="再次確認密碼" v-model="student.info.passwordConfirmation">
                       <label for="inputPasswordConfirmation" class="form-label">再次確認密碼</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="date" class="form-control" id="inputDate" placeholder="生日" v-model="student.birthday">
+                      <input type="date" class="form-control" id="inputDate" placeholder="生日" v-model="student.profile.birthday">
                       <label for="inputDate" class="form-label">生日</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="text" class="form-control" id="inputCellPhone" placeholder="手機" v-model="student.cellphone">
+                      <input type="text" class="form-control" id="inputCellPhone" placeholder="手機" v-model="student.profile.cellphone">
                       <label for="inputCellPhone" class="form-label">手機</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="text" class="form-control" id="inputPhone" placeholder="市話" v-model="student.phone">
+                      <input type="text" class="form-control" id="inputPhone" placeholder="市話" v-model="student.profile.phone">
                       <label for="inputPhone" class="form-label">市話</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="text" class="form-control" id="inputSchool" placeholder="學校" v-model="student.school">
+                      <input type="text" class="form-control" id="inputSchool" placeholder="學校" v-model="student.profile.school">
                       <label for="inputSchool" class="form-label">學校</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <select class="form-select" id="floatingSelect" aria-label="Floating label select example" @change="switchSubSelect(student.mainGrade)" v-model="student.mainGrade">
+                      <select class="form-select" id="floatingSelect" aria-label="Floating label select example" @change="switchSubSelect(student.profile.mainGrade)" v-model="student.profile.mainGrade">
                         <option value="elementary_school">國小</option>
                         <option value="junior_high_school">國中</option>
                         <option value="senior_high_school">高中</option>
@@ -54,7 +54,7 @@
                       <label for="floatingSelect">學級</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': hideGradeSubSelect.elementary }">
-                      <select class="form-select" id="elementarySelect" aria-label="elementarySelect" v-model="student.subGrade">
+                      <select class="form-select" id="elementarySelect" aria-label="elementarySelect" v-model="student.profile.subGrade">
                         <option value="first_grade">一年級</option>
                         <option value="second_grade">二年級</option>
                         <option value="third_grade">三年級</option>
@@ -65,7 +65,7 @@
                       <label for="elementarySelect ">年級</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': hideGradeSubSelect.junior }">
-                      <select class="form-select" id="juniorHighSelect" aria-label="juniorHighSelect" v-model="student.subGrade">
+                      <select class="form-select" id="juniorHighSelect" aria-label="juniorHighSelect" v-model="student.profile.subGrade">
                         <option value="seventh_grade">七年級</option>
                         <option value="eighth_Grade">八年級</option>
                         <option value="ninth_grade">九年級</option>
@@ -73,7 +73,7 @@
                       <label for="juniorHighSelect ">年級</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': hideGradeSubSelect.senior }">
-                      <select class="form-select" id="seniorHighSchoolSelect" aria-label="seniorHighSchoolSelect" v-model="student.subGrade">
+                      <select class="form-select" id="seniorHighSchoolSelect" aria-label="seniorHighSchoolSelect" v-model="student.profile.subGrade">
                         <option value="tenth_grade">高一</option>
                         <option value="eleventh_grade">高二</option>
                         <option value="twelfth_grade">高三</option>
@@ -81,7 +81,7 @@
                       <label for="seniorHighSchoolSelect ">年級</label>
                     </div>
                     <div class="col-md-3 form-floating mt-4">
-                      <select class="form-select" id="countySelect" aria-label="Floating label select example" v-model="student.county">
+                      <select class="form-select" id="countySelect" aria-label="Floating label select example" v-model="student.profile.county">
                         <option value="keelung_city">基隆市</option>
                         <option value="taipei_city">台北市</option>
                         <option value="new_taipei_city">新北市</option>
@@ -108,24 +108,24 @@
                       <label for="countySelect">縣市</label>
                     </div>
                     <div class="col-md-7 form-floating mt-4">
-                      <input type="text" class="form-control" id="inputaddress" placeholder="地址" v-model="student.address">
+                      <input type="text" class="form-control" id="inputaddress" placeholder="地址" v-model="student.profile.address">
                       <label for="inputaddress" class="form-label">地址</label>
                     </div>
                     <div class="col-md-11 mt-4">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="branchSchoolACheck" value="A" name="branchSchool" v-model="student.branchSchool">
+                        <input class="form-check-input" type="checkbox" id="branchSchoolACheck" value="A" name="branchSchool_A" v-model="student.branchSchools">
                         <label class="form-check-label" for="branchSchoolACheck">分校A</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="branchSchoolBCheck" value="B" name="branchSchool" v-model="student.branchSchool">
+                        <input class="form-check-input" type="checkbox" id="branchSchoolBCheck" value="B" name="branchSchool_B" v-model="student.branchSchools">
                         <label class="form-check-label" for="branchSchoolBCheck">分校B</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="branchSchoolCCheck" value="C" name="branchSchool" v-model="student.branchSchool">
+                        <input class="form-check-input" type="checkbox" id="branchSchoolCCheck" value="C" name="branchSchool_C" v-model="student.branchSchools">
                         <label class="form-check-label" for="branchSchoolCCheck">分校C</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="branchSchoolDCheck" value="D" name="branchSchool" v-model="student.branchSchool">
+                        <input class="form-check-input" type="checkbox" id="branchSchoolDCheck" value="D" name="branchSchool_D" v-model="student.branchSchools">
                         <label class="form-check-label" for="branchSchoolDCheck">分校D</label>
                       </div>
                     </div>
@@ -153,19 +153,23 @@ import gql from 'graphql-tag'
 import router from '../router';
 
 const student = ref({
-  name: '',
-  email: '',
-  password: '',
-  passwordConfirmation: '',
-  birthday: '',
-  cellphone: '',
-  phone: '',
-  school: '',
-  mainGrade: 'elementary_school',
-  subGrade: 'first_grade',
-  county: 'keelung_city',
-  address: '',
-  branchSchool: ''
+  info: {    
+    name: '',
+    email: '',
+    password: '',
+    passwordConfirmation: ''
+  },
+  profile: {    
+    birthday: '',
+    cellphone: '',
+    phone: '',
+    school: '',
+    mainGrade: 'elementary_school',
+    subGrade: 'first_grade',
+    county: 'keelung_city',
+    address: ''
+  },
+  branchSchools: []
 })
 
 const hideGradeSubSelect = ref({
@@ -175,8 +179,8 @@ const hideGradeSubSelect = ref({
 })
 
 const { mutate: studentSignUp } = useMutation(gql`
-  mutation studentSignUp ($name: String!, $email: String!, $password: String!, $passwordConfirmation: String!, $birthday: String!, $cellphone: String!, $phone: String!, $school: String!, $mainGrade: String!, $subGrade: String!, $county: String!, $address: String!, $branchSchool: String!) {
-    studentSignUp (input: {name: $name, email: $email, password: $password, passwordConfirmation: $passwordConfirmation, birthday: $birthday, cellphone: $cellphone, phone: $phone, school: $school, mainGrade: $mainGrade, subGrade: $subGrade, county: $county, address: $address, branchSchool: $branchSchool }) {
+  mutation studentSignUp ($info: UserInput!, $profile: StudentProfileInput!, $branchSchools: [String!]!) {
+    studentSignUp (input: {info: $info, profile: $profile, branchSchools: $branchSchools }) {
       student { id }
       success
       message
@@ -184,19 +188,13 @@ const { mutate: studentSignUp } = useMutation(gql`
   }
 `, () => ({
   variables: {
-    name: student.value.name,
-    email: student.value.email,
-    password: student.value.password,
-    passwordConfirmation: student.value.passwordConfirmation,
-    birthday: student.value.birthday,
-    cellphone: student.value.cellphone,
-    phone: student.value.phone,
-    school: student.value.school,
-    mainGrade: student.value.mainGrade,
-    subGrade: student.value.subGrade,
-    county: student.value.county,
-    address: student.value.address,
-    branchSchool: student.value.branchSchool
+    info: {
+      ...student.value.info
+    },
+    profile: {
+      ...student.value.profile
+    },
+    branchSchools: student.value.branchSchools
   },
 }))
 
