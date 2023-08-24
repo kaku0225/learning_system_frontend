@@ -15,6 +15,7 @@ import LearningRecord from '../views/LearningRecord.vue'
 
 import AdminHomeView from '../views/AdminHomeView.vue'
 import AccountManagement from '../views/AccountManagement.vue'
+import BranchSchoolManagement from '../views/BranchSchoolManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -78,6 +79,12 @@ const router = createRouter({
       name: 'account_management',
       meta: { layout: AdminInterface },
       component: AccountManagement
+    },
+    {
+      path: '/admin_interface/branch_school_management',
+      name: 'BranchSchoolManagement',
+      meta: { layout: AdminInterface },
+      component: BranchSchoolManagement
     }
     // {
       // path: '/about',

@@ -46,7 +46,7 @@ function mutationLogout(){
         <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">分校管理</a>
         <ul class="collapse list-unstyled" id="pageSubmenu">
           <li>
-            <router-link to="/assignment_review">分校列表</router-link>
+            <router-link to="/admin_interface/branch_school_management">分校列表</router-link>
           </li>
         </ul>
       </li>
