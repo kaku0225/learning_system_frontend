@@ -25,7 +25,7 @@ import App from './App.vue'
 import router from './router'
 
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
-import { DefaultApolloClient } from '@vue/apollo-composable'
+import { provideApolloClient, DefaultApolloClient } from '@vue/apollo-composable'
 
 
 // HTTP connection to the API
@@ -50,6 +50,8 @@ const app = createApp({
 
   render: () => h(App),
 })
+
+provideApolloClient(apolloClient)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())

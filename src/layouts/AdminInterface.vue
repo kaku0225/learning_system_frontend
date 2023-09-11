@@ -1,8 +1,8 @@
 <script setup>
 
 import AdminSidebar from '../components/AdminSidebarsView.vue'
-import { watchEffect, onMounted } from 'vue'
-import { useMutation, useQuery } from '@vue/apollo-composable';
+import { onMounted } from 'vue'
+import { useMutation } from '@vue/apollo-composable';
 import gql from 'graphql-tag'
 import router from '../router'
 
@@ -41,35 +41,7 @@ function mutationLogout(){
   });
 }
 
-function checkLogin() {
-  const { result } = useQuery(
-    gql`
-      query CheckLogin($token: String!, $role: String!) {
-        checkLogin(token: $token, role: $role){
-          success
-          path
-        }
-      }
-    `,
-    {
-      token: token,
-      role: 'Admin'
-    }
-  );
-  watchEffect(() => {
-    if(result.value){
-      if(result.value.checkLogin.success === false) {
-        router.push('/login')
-      } else if(result.value.checkLogin.path) {
-        router.push(`${result.value.checkLogin.path}`)
-      }
-    }
-  })
-}
-
 onMounted(() => {
-  checkLogin()
-
   timeoutId = setTimeout(mutationLogout, userActivityTimeout);
   window.addEventListener('mousemove', handleUserActivity);
   window.addEventListener('keydown', handleUserActivity);

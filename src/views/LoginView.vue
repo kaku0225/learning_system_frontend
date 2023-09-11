@@ -85,16 +85,14 @@ a {
 </style>
 
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue'
-import { useMutation, useQuery } from '@vue/apollo-composable'
+import { ref, onMounted } from 'vue'
+import { useMutation } from '@vue/apollo-composable'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import gql from 'graphql-tag'
 import router from '../router'
 import Modal from 'bootstrap/js/dist/modal'
 import SendResetMailModal from '../components/SendResetMailModal.vue'
-
-const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
 const user = ref({
   email: '',
@@ -154,28 +152,6 @@ function mutationSendResetPasswordEmail(email) {
   })
 }
 
-function checkLogin() {
-  const { result } = useQuery(
-    gql`
-      query CheckLogin($token: String!, $role: String!) {
-        checkLogin(token: $token, role: $role){
-          success
-          path
-        }
-      }
-    `,
-    {
-      token: token,
-      role: 'User'
-    }
-  );
-  watchEffect(() => {
-    if (result.value && result.value.checkLogin.success === true) {
-      router.push(`${result.value.checkLogin.path}`)
-    }
-  })
-}
-
 function open(){
   resetModal.value.modal.show()
 }
@@ -185,7 +161,6 @@ function close(){
 }
 
 onMounted(() => {
-  checkLogin()
   resetModal.value.modal = new Modal('#resetModal', {})
 })
 </script>

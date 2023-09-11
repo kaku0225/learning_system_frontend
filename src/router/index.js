@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+// import { useQuery } from '@vue/apollo-composable';
+import { useApolloClient } from '@vue/apollo-composable';
+import gql from 'graphql-tag'
+
 import WithNavLayout from '../layouts/WithNav.vue'
 import WithoutNavLayout from '../layouts/WithoutNav.vue'
 import AdminInterface from '../layouts/AdminInterface.vue'
@@ -96,5 +100,37 @@ const router = createRouter({
     // }
   ]
 })
+
+
+
+router.beforeEach(async (to) => {
+  if(to.path === '/sign_up' || to.path === '/reset_password') {
+    return
+  }
+  const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  const { resolveClient } = useApolloClient();
+  const client = resolveClient()
+
+  const response = await client.query({
+    query: gql`
+      query CheckAuthentication($token: String!, $path: String!) {
+        checkAuthentication(token: $token, path: $path){
+          success
+          path
+        }
+      }
+    `,
+    variables: {
+      token,
+      path: to.path,
+    },
+  });
+
+  if (response.data.checkAuthentication.success) {
+    return true
+  } else {
+    router.push(response.data.checkAuthentication.path);
+  }
+});
 
 export default router
