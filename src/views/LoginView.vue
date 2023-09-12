@@ -108,6 +108,7 @@ const { mutate: login } = useMutation(gql`
       success
       expiredTime
       message
+      path
     }
   }
 `, () => ({
@@ -132,11 +133,7 @@ function mutationLogin(){
       const jti = result.data.login.user.jti
       const expired_time = result.data.login.expiredTime
       document.cookie = `token=${jti}; expires=${new Date(expired_time)}; path=/`;
-      if(result.data.login.user.type === 'Student') {
-        router.push('/')
-      } else {
-        router.push('/admin_interface')
-      }
+      router.push(result.data.login.path)
     } else {
       toast.error(result.data.login.message, { autoClose: 3000 })
     }
