@@ -6,6 +6,15 @@
   import gql from 'graphql-tag'
 
   const classAdvisers = ref([])
+  const selectedClassAdviser = ref({
+    id: '',
+    email: '',
+    name: '',
+    profile: {
+      cellphone: ''
+    },
+    branch_schools: []
+  })
 
   const ClassAdviserModal = ref({ modal: null })
 
@@ -13,10 +22,15 @@
     const { result } = useQuery(gql`
         query {
           classAdvisers {
+            id
             email
             name
             profile {
               cellphone
+            }
+            branchSchools {
+              name
+              code
             }
           }
         }
@@ -29,6 +43,21 @@
   }
 
   function open() {
+    selectedClassAdviser.value = {}
+    ClassAdviserModal.value.modal.show()
+  }
+
+  function editOpen(classAdviser){
+
+    const newClassAdviser = {
+      ...classAdviser,
+      branchSchools: classAdviser.branchSchools.map((school) => {
+          return { name: school.name, code: school.code }
+        // 創建新的對象，不包括 __typename 屬性
+      }),
+    };
+
+    selectedClassAdviser.value = newClassAdviser
     ClassAdviserModal.value.modal.show()
   }
 
@@ -62,7 +91,11 @@
         <tbody>
           <template v-for="(classAdviser, index) in classAdvisers" :key="index">
             <tr>
-              <td>{{ classAdviser.email }}</td>
+              <td>
+                <a href="#" @click="editOpen(classAdviser)">
+                  {{ classAdviser.email }}
+                </a>
+              </td>
               <td>{{ classAdviser.name }}</td>
               <td>{{ classAdviser.profile.cellphone }}</td>
             </tr>
@@ -88,5 +121,5 @@
       </nav>
     </div>
   </div>
-  <ClassAdviserNewModal ref="ClassAdviserModal" @updateClassAdvisers="updateCurrentClassAdvisers"></ClassAdviserNewModal>
+  <ClassAdviserNewModal ref="ClassAdviserModal" :classAdviser="selectedClassAdviser" @updateClassAdvisers="updateCurrentClassAdvisers"></ClassAdviserNewModal>
 </template>

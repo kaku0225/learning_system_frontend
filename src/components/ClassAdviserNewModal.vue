@@ -1,19 +1,15 @@
 <script setup>
-import { ref } from 'vue'
+import { toRefs, computed } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import { toast } from 'vue3-toastify'
 import Multiselect from 'vue-multiselect'
 import gql from 'graphql-tag'
 import 'vue3-toastify/dist/index.css'
 
-const emits = defineEmits(['updateClassAdvisers'])
+const props = defineProps({ classAdviser: Object });
+const { classAdviser } = toRefs(props);
 
-const classAdviser = ref({
-  email: '',
-  name: '',
-  cellphone: '',
-  branchSchools: []
-})
+const emits = defineEmits(['updateClassAdvisers'])
 
 const options = [
   { name: 'Vue.js', code: 'vu' },
@@ -25,10 +21,15 @@ const { mutate: classAdviserSignUp } = useMutation(gql`
   mutation classAdviserSignUp ($name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
     classAdviserSignUp (input: {name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
       classAdvisers {
+        id
         email
         name
         profile {
           cellphone
+        }
+        branchSchools {
+          name
+          code
         }
       }
       success
@@ -39,12 +40,47 @@ const { mutate: classAdviserSignUp } = useMutation(gql`
   variables: {
     name: classAdviser.value.name,
     email: classAdviser.value.email,
-    cellphone: classAdviser.value.cellphone,
+    cellphone: classAdviser.value.profile.cellphone,
     branchSchools: classAdviser.value.branchSchools.map(school => school.name)
   },
 }))
 
+const { mutate: classAdviserUpdate } = useMutation(gql`
+  mutation classAdviserUpdate ($id: String!, $name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
+    classAdviserUpdate (input: {id: $id, name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
+      classAdvisers {
+        id
+        email
+        name
+        profile {
+          cellphone
+        }
+        branchSchools {
+          name
+          code
+        }
+      }
+      success
+      message
+    }
+  }
+`, () => ({
+  variables: {
+    id: classAdviser.value.id,
+    name: classAdviser.value.name,
+    email: classAdviser.value.email,
+    cellphone: classAdviser.value.profile.cellphone,
+    branchSchools: classAdviser.value.branchSchools.map(school => school.name)
+  },
+}))
 
+const submitButtonText = computed(() => {
+  return classAdviser.value.id ? '更新' : '新增';
+})
+
+const titleText = computed(() => {
+  return classAdviser.value.id ? '更新帳號' : '新增帳號';
+})
 
 function addTag(newTag){
   const tag = {
@@ -52,18 +88,38 @@ function addTag(newTag){
     code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
   }
   options.value.push(tag)
-  classAdviser.value.value.push(tag)
+  classAdviser.value.push(tag)
 }
 
 function mutationSignUp(){
   classAdviserSignUp().then(result => {
     if(result.data.classAdviserSignUp.success) {
       emits('updateClassAdvisers', result.data.classAdviserSignUp.classAdvisers)
-      classAdviser.value = { email: '', name: '', cellphone: '', branchSchools: [] }
+      classAdviser.value = { email: '', name: '', profile: {}, branchSchools: [] }
     } else {
       toast.error(result.data.classAdviserSignUp.message, { autoClose: 3000 })
     }
   });
+}
+
+function mutationUpdate(){
+  console.log(classAdviser.value.branchSchools.map(school => school.name))
+  classAdviserUpdate().then(result => {
+    if(result.data.classAdviserUpdate.success) {
+      emits('updateClassAdvisers', result.data.classAdviserUpdate.classAdvisers)
+      classAdviser.value = { id: '', email: '', name: '', profile: {}, branchSchools: [] }
+    } else {
+      toast.error(result.data.classAdviserUpdate.message, { autoClose: 3000 })
+    }
+  });
+}
+
+function signUpOrUpdate(){
+  if(classAdviser.value.id){
+    mutationUpdate()
+  } else {
+    mutationSignUp()
+  }
 }
 
 </script>
@@ -73,10 +129,10 @@ function mutationSignUp(){
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">新增帳號</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ titleText }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="row g-3 p-3" @submit.prevent="mutationSignUp">
+        <form class="row g-3 p-3" @submit.prevent="signUpOrUpdate">
           <div class="col-md-6">
             <label for="inputEmail4" class="form-label">Email</label>
             <input type="email" class="form-control" id="inputEmail4" v-model="classAdviser.email">
@@ -87,7 +143,7 @@ function mutationSignUp(){
           </div>
           <div class="col-md-6">
             <label for="inputCellphone" class="form-label">手機</label>
-            <input type="text" class="form-control" id="inputCellphone" v-model="classAdviser.cellphone">
+            <input type="text" class="form-control" id="inputCellphone" v-model="classAdviser.profile.cellphone">
           </div>
           <div class="col-md-6">
             <label class="typo__label form-label">負責分校</label>
@@ -95,7 +151,7 @@ function mutationSignUp(){
           </div>
           <div class="col-12 modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-            <button type="submit" class="btn btn-primary">新增</button>
+            <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
           </div>
         </form>
       </div>
