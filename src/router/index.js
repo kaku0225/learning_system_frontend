@@ -7,6 +7,7 @@ import gql from 'graphql-tag'
 import WithNavLayout from '../layouts/WithNav.vue'
 import WithoutNavLayout from '../layouts/WithoutNav.vue'
 import AdminInterface from '../layouts/AdminInterface.vue'
+import ClassAdviserInterface from '../layouts/ClassAdviserInterface.vue'
 
 import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
@@ -20,6 +21,8 @@ import LearningRecord from '../views/LearningRecord.vue'
 import AdminHomeView from '../views/AdminHomeView.vue'
 import AccountManagement from '../views/AccountManagement.vue'
 import BranchSchoolManagement from '../views/BranchSchoolManagement.vue'
+
+import ClassAdviserHoneView from '../views/ClassAdviserHomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,6 +92,12 @@ const router = createRouter({
       name: 'BranchSchoolManagement',
       meta: { layout: AdminInterface },
       component: BranchSchoolManagement
+    },
+    {
+      path: '/class_adviser_interface',
+      name: 'class_adviser_interface',
+      meta: { layout: ClassAdviserInterface },
+      component: ClassAdviserHoneView
     }
     // {
       // path: '/about',
