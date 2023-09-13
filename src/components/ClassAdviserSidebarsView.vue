@@ -38,7 +38,7 @@ function mutationLogout(){
         <a href="#homeSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">人員管理</a>
         <ul class="collapse list-unstyled" id="homeSubmenu">
           <li>
-            <router-link to="/admin_interface/account_management">行政人員管理</router-link>
+            <router-link to="/class_adviser_interface/administration_staff_management">行政人員管理</router-link>
           </li>
           <li>
             <router-link to="/admin_interface/account_management">學員資料管理</router-link>

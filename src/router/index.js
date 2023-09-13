@@ -23,6 +23,7 @@ import AccountManagement from '../views/AccountManagement.vue'
 import BranchSchoolManagement from '../views/BranchSchoolManagement.vue'
 
 import ClassAdviserHoneView from '../views/ClassAdviserHomeView.vue'
+import AdministrationStaffManagement from '../views/AdministrationStaffManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -98,6 +99,12 @@ const router = createRouter({
       name: 'class_adviser_interface',
       meta: { layout: ClassAdviserInterface },
       component: ClassAdviserHoneView
+    },
+    {
+      path: '/class_adviser_interface/administration_staff_management',
+      name: 'administration_staff_management',
+      meta: { layout: ClassAdviserInterface },
+      component: AdministrationStaffManagement
     }
     // {
       // path: '/about',
