@@ -1,9 +1,9 @@
 <script setup>
-import { toRefs, defineProps } from 'vue';
+import { toRefs } from 'vue';
 
-const props = defineProps({ content: String, title: String });
+const props = defineProps({ selectedTodoList: Object });
 const emits = defineEmits(['todoListContentClose']);
-const { title, content } = toRefs(props);
+const { selectedTodoList } = toRefs(props);
 
 function contentClose(){
   emits('todoListContentClose')
@@ -15,10 +15,10 @@ function contentClose(){
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ selectedTodoList.title }}</h5>
         </div>
         <div class="modal-body" style="white-space: pre-line">
-          {{ content }}
+          {{ selectedTodoList.content }}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="contentClose">Close</button>

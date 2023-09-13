@@ -7,6 +7,10 @@ const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.
 export const useTodoListStore = defineStore('todoList', () => {
   const PendingTodoLists = ref([])
   const DoneTodoLists = ref([])
+  const selectedTodoList = ref({
+    title: '',
+    content: ''
+  })
 
   function fetchTodoListByStatus() {
     const { result } = useQuery(
@@ -38,5 +42,5 @@ export const useTodoListStore = defineStore('todoList', () => {
     })
   }
 
-  return { PendingTodoLists, DoneTodoLists, fetchTodoListByStatus }
+  return { PendingTodoLists, DoneTodoLists, selectedTodoList, fetchTodoListByStatus }
 })

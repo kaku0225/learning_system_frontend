@@ -11,10 +11,7 @@
 
   const store = useTodoListStore()
   const { fetchTodoListByStatus } = store
-  const { PendingTodoLists, DoneTodoLists } = storeToRefs(store)
-
-  const title = ref('')
-  const content = ref('')
+  const { PendingTodoLists, DoneTodoLists, selectedTodoList } = storeToRefs(store)
 
   const TodoListContentModal = ref({modal: null})
 
@@ -25,8 +22,8 @@
   }
 
   function contentOpen(newContent, newTitle) {
-    content.value = newContent
-    title.value = newTitle
+    selectedTodoList.value.content = newContent
+    selectedTodoList.value.title = newTitle
     TodoListContentModal.value.modal.show()
   }
 
@@ -163,7 +160,7 @@
     </div>
   </div>
   <TodoListNewModal ref="TodoListModal" @closeTodoModal="close" @todoLists="resetTodoList"></TodoListNewModal>
-  <TodoListMessageModal ref="TodoListContentModal" :content="content" :title="title" @todoListContentClose="contentClose"></TodoListMessageModal>
+  <TodoListMessageModal ref="TodoListContentModal" :selectedTodoList="selectedTodoList" @todoListContentClose="contentClose"></TodoListMessageModal>
 </template>
 
 <style scoped>
