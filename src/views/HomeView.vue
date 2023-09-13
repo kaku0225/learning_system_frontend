@@ -1,49 +1,20 @@
 <script setup>
-  import { ref, onMounted, watchEffect } from 'vue'
-  import { useQuery } from '@vue/apollo-composable';
-  import gql from 'graphql-tag'
+  import { ref, onMounted } from 'vue'
   import Modal from 'bootstrap/js/dist/modal'
   import ExamCountDown from '../components/ExamCountDownView.vue'
   import Rank from '../components/RankView.vue'
   import TodoListNewModal from '../components/TodoListNewModal.vue'
   import TodoListMessageModal from '../components/TodoListMessageModal.vue'
-  
-  const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
-  const PendingTodoLists = ref([])
-  const DoneTodoLists = ref([])
+  import { storeToRefs } from 'pinia'
+  import { useTodoListStore } from "@/stores/todolist.js"
+
+  const store = useTodoListStore()
+  const { fetchTodoListByStatus } = store
+  const { PendingTodoLists, DoneTodoLists } = storeToRefs(store)
+
   const title = ref('')
   const content = ref('')
-
-  function fetchTodoListByStatus() {
-    const { result } = useQuery(
-      gql`
-        query TodoListByStatus($token: String!) {
-          todoListByStatus(token: $token) {
-            pendingTodoLists {
-              title
-              content
-              createdAt
-            }
-            doneTodoLists {
-              title
-              content
-              createdAt
-            }
-          }
-        }
-      `,
-      {
-        token: token,
-      }
-    );
-    watchEffect(() => {
-      if (result.value) {
-        PendingTodoLists.value = result.value.todoListByStatus.pendingTodoLists;
-        DoneTodoLists.value = result.value.todoListByStatus.doneTodoLists;
-      }
-    })
-  }
 
   const TodoListContentModal = ref({modal: null})
 
@@ -74,7 +45,7 @@
   onMounted(() => {
     TodoListModal.value.modal = new Modal('#todoListModal', {})
     TodoListContentModal.value.modal = new Modal('#todoListMessageModal', {})
-    fetchTodoListByStatus()
+    fetchTodoListByStatus();
   })
 </script>
 
@@ -194,7 +165,6 @@
   <TodoListNewModal ref="TodoListModal" @closeTodoModal="close" @todoLists="resetTodoList"></TodoListNewModal>
   <TodoListMessageModal ref="TodoListContentModal" :content="content" :title="title" @todoListContentClose="contentClose"></TodoListMessageModal>
 </template>
-
 
 <style scoped>
 </style>
