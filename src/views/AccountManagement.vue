@@ -1,46 +1,15 @@
 <script setup>
-  import { ref, onMounted, watchEffect } from 'vue';
-  import { useQuery } from '@vue/apollo-composable';
+  import { ref, onMounted } from 'vue';
   import Modal from 'bootstrap/js/dist/modal'
   import ClassAdviserNewModal from '../components/ClassAdviserNewModal.vue'
-  import gql from 'graphql-tag'
+  import { storeToRefs } from 'pinia'
+  import { useClassAdvisersAccountStore } from "@/stores/classAdvisersAccount.js"
 
-  const classAdvisers = ref([])
-  const selectedClassAdviser = ref({
-    id: '',
-    email: '',
-    name: '',
-    profile: {
-      cellphone: ''
-    },
-    branch_schools: []
-  })
+  const store = useClassAdvisersAccountStore()
+  const { fetchClassAdvisers } = store
+  const { classAdvisers, selectedClassAdviser } = storeToRefs(store)
 
   const ClassAdviserModal = ref({ modal: null })
-
-  function fetchClassAdvisers() {
-    const { result } = useQuery(gql`
-        query {
-          classAdvisers {
-            id
-            email
-            name
-            profile {
-              cellphone
-            }
-            branchSchools {
-              name
-              code
-            }
-          }
-        }
-      `);
-    watchEffect(() => {
-      if (result.value) {
-        classAdvisers.value = result.value.classAdvisers;
-      }
-    })
-  }
 
   function open() {
     selectedClassAdviser.value = {}
