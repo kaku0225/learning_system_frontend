@@ -1,3 +1,21 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import Modal from 'bootstrap/js/dist/modal';
+import AdministrationStaffNewModal from '../components/AdministrationStaffNewModal.vue'
+
+
+const AdministrationStaffModal = ref({ modal: null })
+
+function open(){
+  AdministrationStaffModal.value.modal.show()
+}
+
+onMounted(() => {
+  AdministrationStaffModal.value.modal = new Modal('#AdministrationStaffModal', {})
+})
+
+</script>
+
 <template>
   <h2>人員管理</h2>
   <hr>
@@ -219,7 +237,7 @@
     <!-- class home work -->
     <div class="tab-pane fade show active" id="class-home-work" role="tabpanel" aria-labelledby="class-home-work-tab">
       <br>
-      <button type="button" class="btn btn-primary">新增人員</button>
+      <button type="button" class="btn btn-primary" @click="open">新增人員</button>
       <table class="table table-bordered" style="margin-top: 30px">
         <thead>
           <tr>
@@ -257,6 +275,7 @@
       </nav>
     </div>
   </div>
+  <AdministrationStaffNewModal></AdministrationStaffNewModal>
 </template>
 
 <style scoped>
