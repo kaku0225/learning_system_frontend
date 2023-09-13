@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// import { useQuery } from '@vue/apollo-composable';
 import { useApolloClient } from '@vue/apollo-composable';
 import gql from 'graphql-tag'
 

@@ -1,27 +1,17 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
-import { useQuery } from '@vue/apollo-composable';
-import VueCountdown from '@chenfengyuan/vue-countdown';
-import gql from 'graphql-tag'
-const s_exam = ref(0)
-const c_exam = ref(0)
+  import { onMounted } from 'vue'
+  import VueCountdown from '@chenfengyuan/vue-countdown';
+  import { storeToRefs } from 'pinia'
+  import { useExamCountDownStore } from "@/stores/examCountDown.js"
 
-const { result } = useQuery(gql`
-  query {
-    examCountdown {
-      sectionalExam
-      comprehensiveAssessmentProgram
-    }
-  }
-`);
+  const store = useExamCountDownStore()
+  const { countDown } = store
+  const { s_exam, c_exam } = storeToRefs(store)
 
-watchEffect(() => {
-  if (result.value) {
-    s_exam.value = parseInt(result.value.examCountdown.sectionalExam)
-    c_exam.value = parseInt(result.value.examCountdown.comprehensiveAssessmentProgram)
-  }
-});
-
+  onMounted(() => {
+    countDown()
+  })
+  
 </script>
 
 <template>

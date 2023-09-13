@@ -7,7 +7,7 @@
   import TodoListMessageModal from '../components/TodoListMessageModal.vue'
 
   import { storeToRefs } from 'pinia'
-  import { useTodoListStore } from "@/stores/todolist.js"
+  import { useTodoListStore } from "@/stores/todoList.js"
 
   const store = useTodoListStore()
   const { fetchTodoListByStatus } = store
