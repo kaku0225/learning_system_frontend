@@ -1,6 +1,7 @@
-import { ref, watchEffect } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { useQuery } from '@vue/apollo-composable';
+import { useApolloClient } from '@vue/apollo-composable';
+import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
 export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', () => {
@@ -8,8 +9,77 @@ export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', 
   const selectedClassAdviser = ref({ id: '', email: '', name: '', branch_schools: [] })
   const selectedClassAdviserProfile = ref({ cellphone: ''})
 
-  function fetchClassAdvisers() {
-    const { result } = useQuery(gql`
+  const { mutate: classAdviserSignUp } = useMutation(gql`
+    mutation classAdviserSignUp ($name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
+      classAdviserSignUp (input: {name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
+        classAdvisers {
+          id
+          email
+          name
+          profile {
+            cellphone
+          }
+          branchSchools {
+            name
+            code
+          }
+        }
+        success
+        message
+      }
+    }
+  `, () => ({
+    variables: {
+      name: selectedClassAdviser.value.name,
+      email: selectedClassAdviser.value.email,
+      cellphone: selectedClassAdviserProfile.value.cellphone,
+      branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
+    },
+  }))
+
+  const { mutate: classAdviserUpdate } = useMutation(gql`
+    mutation classAdviserUpdate ($id: String!, $name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
+      classAdviserUpdate (input: {id: $id, name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
+        classAdvisers {
+          id
+          email
+          name
+          profile {
+            cellphone
+          }
+          branchSchools {
+            name
+            code
+          }
+        }
+        success
+        message
+      }
+    }
+  `, () => ({
+    variables: {
+      id: selectedClassAdviser.value.id,
+      name: selectedClassAdviser.value.name,
+      email: selectedClassAdviser.value.email,
+      cellphone: selectedClassAdviserProfile.value.cellphone,
+      branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
+    },
+  }))
+
+  const submitButtonText = computed(() => {
+    return selectedClassAdviser.value.id ? '更新' : '新增';
+  })
+  
+  const titleText = computed(() => {
+    return selectedClassAdviser.value.id ? '更新帳號' : '新增帳號';
+  })
+
+  async function fetchClassAdvisers() {
+    const { resolveClient } = useApolloClient();
+    const client = resolveClient()
+
+    const response = await client.query({
+      query: gql`
         query {
           classAdvisers {
             id
@@ -24,20 +94,20 @@ export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', 
             }
           }
         }
-      `);
-    watchEffect(() => {
-      if (result.value) {
-        classAdvisers.value = result.value.classAdvisers;
-      }
-    })
+      `,fetchPolicy: "no-cache" 
+    });
+
+    if (response.data.classAdvisers) {
+      classAdvisers.value = response.data.classAdvisers;
+    }
   }
 
   function assignSelectedClassAdviser(classAdviser){
-    const { profile, ...selectedWithoutProfile } = classAdviser;
+    const { profile, branchSchools, ...selectedWithoutProfile } = classAdviser;
 
     const newClassAdviser = {
       ...selectedWithoutProfile,
-      branchSchools: classAdviser.branchSchools.map((school) => {
+      branchSchools: branchSchools.map((school) => {
         return { name: school.name, code: school.code }
         // 創建新的對象，不包括 __typename 屬性
       }),
@@ -47,5 +117,9 @@ export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', 
     selectedClassAdviser.value = newClassAdviser
   }
 
-  return { classAdvisers, selectedClassAdviser, selectedClassAdviserProfile, fetchClassAdvisers, assignSelectedClassAdviser }
+  function reAssignClassAdvisers(reAssignClassAdvisers) {
+    classAdvisers.value = reAssignClassAdvisers
+  }
+
+  return { classAdvisers, selectedClassAdviser, selectedClassAdviserProfile, submitButtonText, titleText, fetchClassAdvisers, assignSelectedClassAdviser, classAdviserSignUp, classAdviserUpdate, reAssignClassAdvisers }
 })

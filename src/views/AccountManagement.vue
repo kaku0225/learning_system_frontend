@@ -7,22 +7,20 @@
 
   const store = useClassAdvisersAccountStore()
   const { fetchClassAdvisers, assignSelectedClassAdviser } = store
-  const { classAdvisers, selectedClassAdviser } = storeToRefs(store)
+  const { classAdvisers } = storeToRefs(store)
 
   const ClassAdviserModal = ref({ modal: null })
 
-  function open() {
-    assignSelectedClassAdviser({id: '', email: '', name: '', profile: { cellphone: '' }, branchSchools: [] })
+  function open(classAdviser) {
+    if(classAdviser) {
+      assignSelectedClassAdviser(classAdviser)
+    } else {
+      assignSelectedClassAdviser({id: '', email: '', name: '', profile: { cellphone: '' }, branchSchools: [] })
+    }
     ClassAdviserModal.value.modal.show()
   }
 
-  function editOpen(classAdviser){
-    assignSelectedClassAdviser(classAdviser)
-    ClassAdviserModal.value.modal.show()
-  }
-
-  function updateCurrentClassAdvisers(updatedClassAdvisers){
-    classAdvisers.value = updatedClassAdvisers
+  function hide() {
     ClassAdviserModal.value.modal.hide()
   }
 
@@ -39,7 +37,7 @@
     <!-- class home work -->
     <div class="tab-pane fade show active" id="class-home-work" role="tabpanel" aria-labelledby="class-home-work-tab">
       <br>
-      <button type="button" class="btn btn-primary" @click="open">新增帳號</button>
+      <button type="button" class="btn btn-primary" @click="open('')">新增帳號</button>
       <table class="table table-bordered" style="margin-top: 30px">
         <thead>
           <tr>
@@ -52,7 +50,7 @@
           <template v-for="(classAdviser, index) in classAdvisers" :key="index">
             <tr>
               <td>
-                <a href="#" @click="editOpen(classAdviser)">
+                <a href="#" @click="open(classAdviser)">
                   {{ classAdviser.email }}
                 </a>
               </td>
@@ -81,5 +79,5 @@
       </nav>
     </div>
   </div>
-  <ClassAdviserNewModal ref="ClassAdviserModal" :classAdviser="selectedClassAdviser" @updateClassAdvisers="updateCurrentClassAdvisers"></ClassAdviserNewModal>
+  <ClassAdviserNewModal ref="ClassAdviserModal" @hideModal="hide"></ClassAdviserNewModal>
 </template>

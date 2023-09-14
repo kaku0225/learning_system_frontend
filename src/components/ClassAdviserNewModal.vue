@@ -1,89 +1,20 @@
 <script setup>
-import { computed } from 'vue'
-import { useMutation } from '@vue/apollo-composable'
-import { toast } from 'vue3-toastify'
 import Multiselect from 'vue-multiselect'
-import gql from 'graphql-tag'
 import 'vue3-toastify/dist/index.css'
-
 import { storeToRefs } from 'pinia'
 import { useClassAdvisersAccountStore } from "@/stores/classAdvisersAccount.js"
+import { toast } from 'vue3-toastify'
 
+const emits = defineEmits(['hideModal'])
 const store = useClassAdvisersAccountStore()
-const { selectedClassAdviser, selectedClassAdviserProfile } = storeToRefs(store)
-
-const emits = defineEmits(['updateClassAdvisers'])
+const { classAdviserSignUp, classAdviserUpdate, reAssignClassAdvisers } = store
+const { selectedClassAdviser, selectedClassAdviserProfile, submitButtonText, titleText } = storeToRefs(store)
 
 const options = [
   { name: 'Vue.js', code: 'vu' },
   { name: 'Javascript', code: 'js' },
   { name: 'Open Source', code: 'os' }
 ]
-
-const { mutate: classAdviserSignUp } = useMutation(gql`
-  mutation classAdviserSignUp ($name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
-    classAdviserSignUp (input: {name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
-      classAdvisers {
-        id
-        email
-        name
-        profile {
-          cellphone
-        }
-        branchSchools {
-          name
-          code
-        }
-      }
-      success
-      message
-    }
-  }
-`, () => ({
-  variables: {
-    name: selectedClassAdviser.value.name,
-    email: selectedClassAdviser.value.email,
-    cellphone: selectedClassAdviserProfile.value.cellphone,
-    branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
-  },
-}))
-
-const { mutate: classAdviserUpdate } = useMutation(gql`
-  mutation classAdviserUpdate ($id: String!, $name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
-    classAdviserUpdate (input: {id: $id, name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
-      classAdvisers {
-        id
-        email
-        name
-        profile {
-          cellphone
-        }
-        branchSchools {
-          name
-          code
-        }
-      }
-      success
-      message
-    }
-  }
-`, () => ({
-  variables: {
-    id: selectedClassAdviser.value.id,
-    name: selectedClassAdviser.value.name,
-    email: selectedClassAdviser.value.email,
-    cellphone: selectedClassAdviserProfile.value.cellphone,
-    branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
-  },
-}))
-
-const submitButtonText = computed(() => {
-  return selectedClassAdviser.value.id ? '更新' : '新增';
-})
-
-const titleText = computed(() => {
-  return selectedClassAdviser.value.id ? '更新帳號' : '新增帳號';
-})
 
 function addTag(newTag){
   const tag = {
@@ -95,32 +26,34 @@ function addTag(newTag){
 }
 
 function mutationSignUp(){
-  classAdviserSignUp().then(result => {
-    if(result.data.classAdviserSignUp.success) {
-      emits('updateClassAdvisers', result.data.classAdviserSignUp.classAdvisers)
-    } else {
-      toast.error(result.data.classAdviserSignUp.message, { autoClose: 3000 })
-    }
-  });
-}
-
-function mutationUpdate(){
-  classAdviserUpdate().then(result => {
-    if(result.data.classAdviserUpdate.success) {
-      emits('updateClassAdvisers', result.data.classAdviserUpdate.classAdvisers)
-    } else {
-      toast.error(result.data.classAdviserUpdate.message, { autoClose: 3000 })
-    }
-  });
-}
-
-function signUpOrUpdate(){
-  if(selectedClassAdviser.value.id){
-    mutationUpdate()
-  } else {
-    mutationSignUp()
+    classAdviserSignUp().then(result => {
+      if(result.data.classAdviserSignUp.success) {
+        reAssignClassAdvisers(result.data.classAdviserSignUp.classAdvisers)
+        emits('hideModal')
+      } else {
+        toast.error(result.data.classAdviserSignUp.message, { autoClose: 3000 })
+      }
+    });
   }
-}
+  
+  function mutationUpdate(){
+    classAdviserUpdate().then(result => {
+      if(result.data.classAdviserUpdate.success) {
+        reAssignClassAdvisers(result.data.classAdviserUpdate.classAdvisers)
+        emits('hideModal')
+      } else {
+        toast.error(result.data.classAdviserUpdate.message, { autoClose: 3000 })
+      }
+    });
+  }
+  
+  function signUpOrUpdate(){
+    if(selectedClassAdviser.value.id){
+      mutationUpdate()
+    } else {
+      mutationSignUp()
+    }
+  }
 
 </script>
 
