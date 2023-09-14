@@ -6,27 +6,18 @@
   import { useClassAdvisersAccountStore } from "@/stores/classAdvisersAccount.js"
 
   const store = useClassAdvisersAccountStore()
-  const { fetchClassAdvisers } = store
+  const { fetchClassAdvisers, assignSelectedClassAdviser } = store
   const { classAdvisers, selectedClassAdviser } = storeToRefs(store)
 
   const ClassAdviserModal = ref({ modal: null })
 
   function open() {
-    selectedClassAdviser.value = {}
+    assignSelectedClassAdviser({id: '', email: '', name: '', profile: { cellphone: '' }, branchSchools: [] })
     ClassAdviserModal.value.modal.show()
   }
 
   function editOpen(classAdviser){
-
-    const newClassAdviser = {
-      ...classAdviser,
-      branchSchools: classAdviser.branchSchools.map((school) => {
-          return { name: school.name, code: school.code }
-        // 創建新的對象，不包括 __typename 屬性
-      }),
-    };
-
-    selectedClassAdviser.value = newClassAdviser
+    assignSelectedClassAdviser(classAdviser)
     ClassAdviserModal.value.modal.show()
   }
 

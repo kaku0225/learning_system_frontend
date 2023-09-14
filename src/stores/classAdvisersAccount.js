@@ -5,15 +5,8 @@ import gql from 'graphql-tag'
 
 export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', () => {
   const classAdvisers = ref([])
-  const selectedClassAdviser = ref({
-    id: '',
-    email: '',
-    name: '',
-    profile: {
-      cellphone: ''
-    },
-    branch_schools: []
-  })
+  const selectedClassAdviser = ref({ id: '', email: '', name: '', branch_schools: [] })
+  const selectedClassAdviserProfile = ref({ cellphone: ''})
 
   function fetchClassAdvisers() {
     const { result } = useQuery(gql`
@@ -39,5 +32,20 @@ export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', 
     })
   }
 
-  return { classAdvisers, selectedClassAdviser, fetchClassAdvisers }
+  function assignSelectedClassAdviser(classAdviser){
+    const { profile, ...selectedWithoutProfile } = classAdviser;
+
+    const newClassAdviser = {
+      ...selectedWithoutProfile,
+      branchSchools: classAdviser.branchSchools.map((school) => {
+        return { name: school.name, code: school.code }
+        // 創建新的對象，不包括 __typename 屬性
+      }),
+    };
+
+    selectedClassAdviserProfile.value = { ...profile }
+    selectedClassAdviser.value = newClassAdviser
+  }
+
+  return { classAdvisers, selectedClassAdviser, selectedClassAdviserProfile, fetchClassAdvisers, assignSelectedClassAdviser }
 })

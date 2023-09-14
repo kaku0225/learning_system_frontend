@@ -1,13 +1,16 @@
 <script setup>
-import { toRefs, computed } from 'vue'
+import { computed } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import { toast } from 'vue3-toastify'
 import Multiselect from 'vue-multiselect'
 import gql from 'graphql-tag'
 import 'vue3-toastify/dist/index.css'
 
-const props = defineProps({ classAdviser: Object });
-const { classAdviser } = toRefs(props);
+import { storeToRefs } from 'pinia'
+import { useClassAdvisersAccountStore } from "@/stores/classAdvisersAccount.js"
+
+const store = useClassAdvisersAccountStore()
+const { selectedClassAdviser, selectedClassAdviserProfile } = storeToRefs(store)
 
 const emits = defineEmits(['updateClassAdvisers'])
 
@@ -38,10 +41,10 @@ const { mutate: classAdviserSignUp } = useMutation(gql`
   }
 `, () => ({
   variables: {
-    name: classAdviser.value.name,
-    email: classAdviser.value.email,
-    cellphone: classAdviser.value.profile.cellphone,
-    branchSchools: classAdviser.value.branchSchools.map(school => school.name)
+    name: selectedClassAdviser.value.name,
+    email: selectedClassAdviser.value.email,
+    cellphone: selectedClassAdviserProfile.value.cellphone,
+    branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
   },
 }))
 
@@ -66,20 +69,20 @@ const { mutate: classAdviserUpdate } = useMutation(gql`
   }
 `, () => ({
   variables: {
-    id: classAdviser.value.id,
-    name: classAdviser.value.name,
-    email: classAdviser.value.email,
-    cellphone: classAdviser.value.profile.cellphone,
-    branchSchools: classAdviser.value.branchSchools.map(school => school.name)
+    id: selectedClassAdviser.value.id,
+    name: selectedClassAdviser.value.name,
+    email: selectedClassAdviser.value.email,
+    cellphone: selectedClassAdviserProfile.value.cellphone,
+    branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
   },
 }))
 
 const submitButtonText = computed(() => {
-  return classAdviser.value.id ? '更新' : '新增';
+  return selectedClassAdviser.value.id ? '更新' : '新增';
 })
 
 const titleText = computed(() => {
-  return classAdviser.value.id ? '更新帳號' : '新增帳號';
+  return selectedClassAdviser.value.id ? '更新帳號' : '新增帳號';
 })
 
 function addTag(newTag){
@@ -88,14 +91,13 @@ function addTag(newTag){
     code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
   }
   options.value.push(tag)
-  classAdviser.value.push(tag)
+  selectedClassAdviser.value.push(tag)
 }
 
 function mutationSignUp(){
   classAdviserSignUp().then(result => {
     if(result.data.classAdviserSignUp.success) {
       emits('updateClassAdvisers', result.data.classAdviserSignUp.classAdvisers)
-      classAdviser.value = { email: '', name: '', profile: {}, branchSchools: [] }
     } else {
       toast.error(result.data.classAdviserSignUp.message, { autoClose: 3000 })
     }
@@ -103,11 +105,9 @@ function mutationSignUp(){
 }
 
 function mutationUpdate(){
-  console.log(classAdviser.value.branchSchools.map(school => school.name))
   classAdviserUpdate().then(result => {
     if(result.data.classAdviserUpdate.success) {
       emits('updateClassAdvisers', result.data.classAdviserUpdate.classAdvisers)
-      classAdviser.value = { id: '', email: '', name: '', profile: {}, branchSchools: [] }
     } else {
       toast.error(result.data.classAdviserUpdate.message, { autoClose: 3000 })
     }
@@ -115,7 +115,7 @@ function mutationUpdate(){
 }
 
 function signUpOrUpdate(){
-  if(classAdviser.value.id){
+  if(selectedClassAdviser.value.id){
     mutationUpdate()
   } else {
     mutationSignUp()
@@ -135,19 +135,19 @@ function signUpOrUpdate(){
         <form class="row g-3 p-3" @submit.prevent="signUpOrUpdate">
           <div class="col-md-6">
             <label for="inputEmail4" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail4" v-model="classAdviser.email">
+            <input type="email" class="form-control" id="inputEmail4" v-model="selectedClassAdviser.email">
           </div>
           <div class="col-md-6">
             <label for="inputName4" class="form-label">Name</label>
-            <input type="text" class="form-control" id="inputName4" v-model="classAdviser.name">
+            <input type="text" class="form-control" id="inputName4" v-model="selectedClassAdviser.name">
           </div>
           <div class="col-md-6">
             <label for="inputCellphone" class="form-label">手機</label>
-            <input type="text" class="form-control" id="inputCellphone" v-model="classAdviser.profile.cellphone">
+            <input type="text" class="form-control" id="inputCellphone" v-model="selectedClassAdviserProfile.cellphone">
           </div>
           <div class="col-md-6">
             <label class="typo__label form-label">負責分校</label>
-            <multiselect v-model="classAdviser.branchSchools" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="code" :options="options" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+            <multiselect v-model="selectedClassAdviser.branchSchools" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="code" :options="options" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
           </div>
           <div class="col-12 modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
