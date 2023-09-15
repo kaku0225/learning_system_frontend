@@ -44,14 +44,14 @@ onMounted(() => {
                 <!-- Email input -->
                 <div class="d-flex justify-content-center">
                   <div class="form-outline mb-4 col-md-8">
-                    <input type="email" id="loginEmail" class="form-control" placeholder="Email" v-model="user.email"/>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Email" autocomplete="email" v-model="user.email"/>
                   </div>
                 </div>
 
                 <!-- Password input -->
                 <div class="d-flex justify-content-center">
                   <div class="form-outline mb-4 col-md-8">
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Password" v-model="user.password"/>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Password" autocomplete="current-password" v-model="user.password"/>
                   </div>
                 </div>
 
