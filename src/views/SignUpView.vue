@@ -1,3 +1,11 @@
+<script setup>
+  import { storeToRefs } from 'pinia'
+  import { useSignUpStore } from "@/stores/signUp.js"
+  const store = useSignUpStore()
+  const { switchSubSelect, mutationSignUp } = store
+  const { student, showGradeSubSelect } = storeToRefs(store)
+</script>
+
 <template>
   <!-- Section: Design Block -->
   <section class="bg-image min-vh-100"
@@ -15,17 +23,17 @@
                       <label for="inputName" class="form-label">姓名</label>
                     </div>
                     <div class="col-md-5 form-floating">
-                      <input type="email" class="form-control" id="inputEmail" placeholder="email" v-model="student.info.email">
+                      <input type="email" class="form-control" id="inputEmail" placeholder="email" autocomplete="email" v-model="student.info.email">
                       <label for="inputEmail" class="form-label">email</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="password" class="form-control" id="inputPassword" placeholder="密碼" v-model="student.info.password">
+                      <input type="password" class="form-control" id="inputPassword" placeholder="密碼" autocomplete="current-password" v-model="student.info.password">
                       <label for="inputPassword" class="form-label">密碼</label>
                       <div id="emailHelp" class="form-text">大於等於8個字元、包含一個數字</div>
                       <div id="emailHelp" class="form-text">包含一個大寫英文、包含一個小寫英文</div>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
-                      <input type="password" class="form-control" id="inputPasswordConfirmation" placeholder="再次確認密碼" v-model="student.info.passwordConfirmation">
+                      <input type="password" class="form-control" id="inputPasswordConfirmation" placeholder="再次確認密碼" autocomplete="current-password" v-model="student.info.passwordConfirmation">
                       <label for="inputPasswordConfirmation" class="form-label">再次確認密碼</label>
                     </div>
                     <div class="col-md-5 form-floating mt-4">
@@ -53,7 +61,7 @@
                       </select>
                       <label for="floatingSelect">學級</label>
                     </div>
-                    <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': hideGradeSubSelect.elementary }">
+                    <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': !showGradeSubSelect.elementary }">
                       <select class="form-select" id="elementarySelect" aria-label="elementarySelect" v-model="student.profile.subGrade">
                         <option value="first_grade">一年級</option>
                         <option value="second_grade">二年級</option>
@@ -64,7 +72,7 @@
                       </select>
                       <label for="elementarySelect ">年級</label>
                     </div>
-                    <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': hideGradeSubSelect.junior }">
+                    <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': !showGradeSubSelect.junior }">
                       <select class="form-select" id="juniorHighSelect" aria-label="juniorHighSelect" v-model="student.profile.subGrade">
                         <option value="seventh_grade">七年級</option>
                         <option value="eighth_Grade">八年級</option>
@@ -72,7 +80,7 @@
                       </select>
                       <label for="juniorHighSelect ">年級</label>
                     </div>
-                    <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': hideGradeSubSelect.senior }">
+                    <div class="col-md-5 form-floating mt-4" :class="{ 'd-none': !showGradeSubSelect.senior }">
                       <select class="form-select" id="seniorHighSchoolSelect" aria-label="seniorHighSchoolSelect" v-model="student.profile.subGrade">
                         <option value="tenth_grade">高一</option>
                         <option value="eleventh_grade">高二</option>
@@ -143,84 +151,3 @@
   </section>
   <!-- Section: Design Block -->
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import { useMutation } from '@vue/apollo-composable'
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
-import gql from 'graphql-tag'
-import router from '../router';
-
-const student = ref({
-  info: {    
-    name: '',
-    email: '',
-    password: '',
-    passwordConfirmation: ''
-  },
-  profile: {    
-    birthday: '',
-    cellphone: '',
-    phone: '',
-    school: '',
-    mainGrade: 'elementary_school',
-    subGrade: 'first_grade',
-    county: 'keelung_city',
-    address: ''
-  },
-  branchSchools: []
-})
-
-const hideGradeSubSelect = ref({
-  elementary: false,
-  junior: true,
-  senior: true
-})
-
-const { mutate: studentSignUp } = useMutation(gql`
-  mutation studentSignUp ($info: UserInput!, $profile: StudentProfileInput!, $branchSchools: [String!]!) {
-    studentSignUp (input: {info: $info, profile: $profile, branchSchools: $branchSchools }) {
-      student { id }
-      success
-      message
-    }
-  }
-`, () => ({
-  variables: {
-    info: {
-      ...student.value.info
-    },
-    profile: {
-      ...student.value.profile
-    },
-    branchSchools: student.value.branchSchools
-  },
-}))
-
-function switchSubSelect(value) {
-  if(value === 'senior_high_school' || value === 'vocational_high_school') {
-    value = 'senior_high_school'
-  }
-
-  hideGradeSubSelect.value = {
-    elementary: value !== 'elementary_school',
-    junior: value !== 'junior_high_school',
-    senior: value !== 'senior_high_school'
-  };
-
-  student.value.subGrade = '';
-}
-
-function mutationSignUp(){
-  studentSignUp().then(result => {
-    if(result.data.studentSignUp.success) {
-      router.push('/login')
-    } else {
-      toast.error(result.data.studentSignUp.message, { autoClose: 3000 })
-    }
-  });
-}
-
-</script>
-
