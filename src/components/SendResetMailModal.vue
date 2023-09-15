@@ -1,13 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useLoginStore } from "@/stores/login.js"
 
-const resetEmail = ref('')
+const store = useLoginStore()
+const { mutationSendResetPasswordEmail } = store
+const { resetEmail } = storeToRefs(store)
 
-const emits = defineEmits(['sendResetEmail'])
+const emits = defineEmits(['hideModal'])
 
-function sendResetEmail(){
-  emits('sendResetEmail', resetEmail.value)
-  resetEmail.value = ''
+async function sendResetEmail(){
+  const hide = await mutationSendResetPasswordEmail()
+  if(hide){
+    emits('hideModal')
+  }
 }
 
 </script>

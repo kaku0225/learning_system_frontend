@@ -1,3 +1,31 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import 'vue3-toastify/dist/index.css'
+import Modal from 'bootstrap/js/dist/modal'
+import SendResetMailModal from '../components/SendResetMailModal.vue'
+
+import { storeToRefs } from 'pinia'
+import { useLoginStore } from "@/stores/login.js"
+
+const resetModal = ref({ modal: null })
+const store = useLoginStore()
+const { mutationLogin } = store
+const { user } = storeToRefs(store)
+
+function open(){
+  resetModal.value.modal.show()
+}
+
+function close(){
+  resetModal.value.modal.hide()
+}
+
+onMounted(() => {
+  resetModal.value.modal = new Modal('#resetModal', {})
+})
+</script>
+
+
 <template>
   <!-- Section: Design Block -->
   <section class="text-center text-lg-start">
@@ -65,7 +93,7 @@
       </div>
     </div>
   </section>
-  <SendResetMailModal ref="resetModal" @sendResetEmail="mutationSendResetPasswordEmail"></SendResetMailModal>
+  <SendResetMailModal ref="resetModal" @hideModal="close"></SendResetMailModal>
 </template>
 
 <style>
@@ -83,81 +111,3 @@ a {
   text-decoration: none;
 }
 </style>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useMutation } from '@vue/apollo-composable'
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
-import gql from 'graphql-tag'
-import router from '../router'
-import Modal from 'bootstrap/js/dist/modal'
-import SendResetMailModal from '../components/SendResetMailModal.vue'
-
-const user = ref({
-  email: '',
-  password: ''
-})
-
-const resetModal = ref({ modal: null })
-
-const { mutate: login } = useMutation(gql`
-  mutation login ($email: String!, $password: String!) {
-    login (input: {email: $email, password: $password }) {
-      user { jti type }
-      success
-      expiredTime
-      message
-      path
-    }
-  }
-`, () => ({
-  variables: {
-    email: user.value.email,
-    password: user.value.password
-  },
-}))
-
-const { mutate: sendResetPasswordEmail } = useMutation(gql`
-  mutation sendResetPasswordEmail ($email: String!) {
-    sendResetPasswordEmail (input: { email: $email}) {
-      user { id }
-      success
-      message
-    }
-  }`)
-
-function mutationLogin(){
-  login().then(result => {
-    if(result.data.login.success) {
-      const jti = result.data.login.user.jti
-      const expired_time = result.data.login.expiredTime
-      document.cookie = `token=${jti}; expires=${new Date(expired_time)}; path=/`;
-      router.push(result.data.login.path)
-    } else {
-      toast.error(result.data.login.message, { autoClose: 3000 })
-    }
-  });
-}
-
-function mutationSendResetPasswordEmail(email) {
-  close()
-  sendResetPasswordEmail({ email: email }).then(result => {
-    if(!result.data.sendResetPasswordEmail.success) {
-      toast.error(result.data.sendResetPasswordEmail.message, { autoClose: 3000 })
-    }
-  })
-}
-
-function open(){
-  resetModal.value.modal.show()
-}
-
-function close(){
-  resetModal.value.modal.hide()
-}
-
-onMounted(() => {
-  resetModal.value.modal = new Modal('#resetModal', {})
-})
-</script>
