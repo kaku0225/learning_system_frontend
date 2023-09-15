@@ -1,46 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-import { useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
+  import { storeToRefs } from 'pinia'
+  import { useTodoListStore } from "@/stores/todoList.js"
 
-const emits = defineEmits(['closeTodoModal', 'todoLists'])
-const todoList = ref({
-    title: '',
-    content: ''
-  })
+  const store = useTodoListStore()
+  const { createTodoList } = store
+  const { title, selectedTodoList } = storeToRefs(store)
+  const emits = defineEmits(['closeTodoModal', 'closeModal'])
 
-const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
-
-const { mutate: create } = useMutation(gql`
-  mutation create ($token: String!, $title: String!, $content: String!) {
-    create (input: {token: $token, title: $title, content: $content }) {
-      todoList { title content createdAt }
-      success
-      message
+  async function mutationCreate(){
+    const close = await createTodoList()
+    if(close){
+      emits('closeModal')
     }
   }
-`, () => ({
-  variables: {
-    token: token,
-    title: todoList.value.title,
-    content: todoList.value.content
-  },
-}))
-
-
-function close(){
-  emits('closeTodoModal')
-}
-
-function mutationCreate(){
-  create().then(result => {
-    close()
-    todoList.value.title = ''
-    todoList.value.content = ''
-    emits('todoLists', result.data.create.todoList)
-  });
-}
-
 </script>
 
 <template>
@@ -48,23 +20,26 @@ function mutationCreate(){
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">新增待辦事項</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ title }}</h5>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="white-space: pre-line" v-if="selectedTodoList.id">
+          {{ selectedTodoList.content }}
+        </div>
+        <div class="modal-body" v-else>
           <form>
             <div class="form-group">
               <label for="recipient-name" class="col-form-label">標籤名稱</label>
-              <input type="text" class="form-control" id="recipient-name" v-model="todoList.title">
+              <input type="text" class="form-control" id="recipient-name" v-model="selectedTodoList.title">
             </div>
             <div class="form-group">
               <label for="message-text" class="col-form-label">待辦事項</label>
-              <textarea class="form-control" id="message-text" v-model="todoList.content"></textarea>
+              <textarea class="form-control" id="message-text" v-model="selectedTodoList.content"></textarea>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">關閉</button>
-          <button type="button" class="btn btn-primary" @click="mutationCreate">新增</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+          <button type="button" class="btn btn-primary" @click="mutationCreate" v-if="!selectedTodoList.id">新增</button>
         </div>
       </div>
     </div>

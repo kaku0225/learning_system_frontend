@@ -94,7 +94,7 @@ export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', 
             }
           }
         }
-      `,fetchPolicy: "no-cache" 
+      `,fetchPolicy: "no-cache"
     });
 
     if (response.data.classAdvisers) {

@@ -34,7 +34,7 @@ function mutationLogout(){
 <template>  
   <nav id="sidebar" class="bg-body-secondary" :class="{ active: stretched }">
     <div class="sidebar-header bg-body-secondary">
-      <h3>Bootstrap Sidebar</h3>
+      <router-link to="/"><h3>Bootstrap Sidebar</h3></router-link>
     </div>
     <ul class="list-unstyled components">
       <p>Dummy Heading</p>

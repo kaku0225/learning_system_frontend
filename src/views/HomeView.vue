@@ -4,44 +4,31 @@
   import ExamCountDown from '../components/ExamCountDownView.vue'
   import Rank from '../components/RankView.vue'
   import TodoListNewModal from '../components/TodoListNewModal.vue'
-  import TodoListMessageModal from '../components/TodoListMessageModal.vue'
 
   import { storeToRefs } from 'pinia'
   import { useTodoListStore } from "@/stores/todoList.js"
 
   const store = useTodoListStore()
-  const { fetchTodoListByStatus } = store
-  const { PendingTodoLists, DoneTodoLists, selectedTodoList } = storeToRefs(store)
-
-  const TodoListContentModal = ref({modal: null})
+  const { fetchTodoListByStatus, assignTodoList } = store
+  const { PendingTodoLists, DoneTodoLists } = storeToRefs(store)
 
   const TodoListModal = ref({ modal: null })
 
-  function open(){
+  function open(todoList){
+    if(todoList) {
+      assignTodoList(todoList)
+    } else {
+      assignTodoList({id: '', title: '', content: ''})
+    }
     TodoListModal.value.modal.show()
-  }
-
-  function contentOpen(newContent, newTitle) {
-    selectedTodoList.value.content = newContent
-    selectedTodoList.value.title = newTitle
-    TodoListContentModal.value.modal.show()
   }
 
   function close(){
     TodoListModal.value.modal.hide()
   }
 
-  function contentClose(){
-    TodoListContentModal.value.modal.hide()
-  }
-
-  function resetTodoList(todoList) {
-    PendingTodoLists.value = todoList
-  }
-
   onMounted(() => {
     TodoListModal.value.modal = new Modal('#todoListModal', {})
-    TodoListContentModal.value.modal = new Modal('#todoListMessageModal', {})
     fetchTodoListByStatus();
   })
 </script>
@@ -58,7 +45,7 @@
           <h5 class="card-title">待辦事項</h5>
           <div class="list-group list-group-flush">
             <template v-for="(todolist, index) in PendingTodoLists" :key="index">
-              <button type="button" class="list-group-item list-group-item-action mt-1" @click="contentOpen(todolist.content, todolist.title)">
+              <button type="button" class="list-group-item list-group-item-action mt-1" @click="open(todolist)">
                 <div class="row">
                   <div class="col">
                     <span>{{ todolist.title }}</span>
@@ -73,7 +60,7 @@
         </div>
         <div class="card-footer d-flex">
           <div class="ms-auto">
-            <button type="button" class="btn btn-outline-success btn-sm border-0" data-toggle="modal" data-target="#exampleModal" @click="open">新增標籤</button>
+            <button type="button" class="btn btn-outline-success btn-sm border-0" data-toggle="modal" data-target="#exampleModal" @click="open('')">新增標籤</button>
           </div>
         </div>
       </div>
@@ -85,7 +72,7 @@
           <h5 class="card-title">已完成事項</h5>
           <div class="list-group list-group-flush">
             <template v-for="(todolist, index) in DoneTodoLists" :key="index">
-              <button type="button" class="list-group-item list-group-item-action mt-1" @click="contentOpen(todolist.content, todolist.title)">
+              <button type="button" class="list-group-item list-group-item-action mt-1" @click="open(todolist)">
                 <div class="row">
                   <div class="col">
                     <span>{{ todolist.title }}</span>
@@ -159,8 +146,7 @@
       </div>
     </div>
   </div>
-  <TodoListNewModal ref="TodoListModal" @closeTodoModal="close" @todoLists="resetTodoList"></TodoListNewModal>
-  <TodoListMessageModal ref="TodoListContentModal" :selectedTodoList="selectedTodoList" @todoListContentClose="contentClose"></TodoListMessageModal>
+  <TodoListNewModal ref="TodoListModal" @closeModal="close"></TodoListNewModal>
 </template>
 
 <style scoped>
