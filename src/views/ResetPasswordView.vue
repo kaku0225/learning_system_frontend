@@ -1,62 +1,10 @@
 <script setup>
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router'
-import { useMutation } from '@vue/apollo-composable'
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
-import gql from 'graphql-tag'
-import router from '../router';
+  import { storeToRefs } from 'pinia'
+  import { useResetPasswordStore } from "@/stores/resetPassword.js"
 
-const password = ref('')
-const passwordConfirmation = ref('')
-const passowrdConfirmationInput = ref('')
-const passowrdConfirmationText = ref('')
-const isButtonDisabled = ref(true)
-const route = useRoute()
-
-const { mutate: resetPassword } = useMutation(gql`
-  mutation resetPassword ($token: String!, $password: String!, $passwordConfirmation: String!) {
-    resetPassword (input: {token: $token, password: $password, passwordConfirmation: $passwordConfirmation }) {
-      user { id }
-      success
-      message
-    }
-  }
-`, () => ({
-  variables: {
-    token: route.query.token,
-    password: password.value,
-    passwordConfirmation: passwordConfirmation.value
-  },
-}))
-
-watch([password, passwordConfirmation], (newValue) => {
-  let passwordValue = newValue[0]
-  let passwordConfirmationValue = newValue[1]
-
-  if(passwordValue !== passwordConfirmationValue) {
-    passowrdConfirmationInput.value = 'border border-danger'
-    passowrdConfirmationText.value = 'text-danger'
-    isButtonDisabled.value = true
-  } else if (passwordValue === '' && passwordConfirmationValue === '') {
-    passowrdConfirmationInput.value = ''
-    passowrdConfirmationText.value = ''
-  }else {
-    passowrdConfirmationInput.value = ''
-    passowrdConfirmationText.value = 'text-success'
-    isButtonDisabled.value = false
-  }
-})
-
-function reset() {
-  resetPassword().then((result) => {
-    if(result.data.resetPassword.success) {
-      router.push('/login')
-    } else {
-      toast.error(result.data.resetPassword.message, { autoClose: 3000 })
-    }
-  })
-}
+  const store = useResetPasswordStore()
+  const { reset } = store
+  const { password, passwordConfirmation, passwordDifferentInputAttribute, passwordDifferentTextAttribute, buttonDisabled } = storeToRefs(store)
 </script>
 
 <template>
@@ -80,15 +28,15 @@ function reset() {
                   </div>
                   <div class="d-flex justify-content-center">
                     <div class="form-floating mb-5 col-md-8">
-                      <input type="password" class="form-control" id="floatingPasswordConfirmation" placeholder="PasswordConfirmation" v-model="passwordConfirmation" :class="passowrdConfirmationInput">
+                      <input type="password" class="form-control" id="floatingPasswordConfirmation" placeholder="PasswordConfirmation" v-model="passwordConfirmation" :class="passwordDifferentInputAttribute">
                       <label for="floatingPassword">再次輸入密碼</label>
                       <div class="col-auto">
-                        <span id="textExample2" class="form-text" style="color:#000" :class="passowrdConfirmationText">必須與密碼一致</span>
+                        <span id="textExample2" class="form-text" style="color:#000" :class="passwordDifferentTextAttribute">必須與密碼一致</span>
                       </div>
                     </div>
                   </div>
                   <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary btn-block btn-lg gradient-custom-4" :disabled="isButtonDisabled">重置</button>
+                    <button class="btn btn-primary btn-block btn-lg gradient-custom-4" :disabled="buttonDisabled">重置</button>
                   </div>
                 </form>
               </div>
