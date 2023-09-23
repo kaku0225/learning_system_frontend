@@ -4,13 +4,28 @@ import { useTeachersAccountStore } from "@/stores/teachersAccount.js"
 
 const emits = defineEmits(['hideModal'])
 const store = useTeachersAccountStore()
-const { mutationTeacherSignUp } = store
-const { selectedTeacher, selectedTeacherProfile } = storeToRefs(store)
+const { mutationTeacherSignUp, mutationTeacherUpdate } = store
+const { selectedTeacher, selectedTeacherProfile, titleText, submitButtonText } = storeToRefs(store)
 
-async function signUp(){
+async function mutationSignUp(){
   const hide = await mutationTeacherSignUp()
   if(hide){
     emits('hideModal')
+  }
+}
+
+async function mutationUpdate(){
+  const hide = await mutationTeacherUpdate()
+  if(hide){
+    emits('hideModal')
+  }
+}
+
+function signUpOrUpdate() {
+  if(selectedTeacher.value.id) {
+    mutationUpdate()
+  } else {
+    mutationSignUp()
   }
 }
 </script>
@@ -20,10 +35,10 @@ async function signUp(){
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">新增老師</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ titleText }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="row g-3 p-3" @submit.prevent="signUp">
+        <form class="row g-3 p-3" @submit.prevent="signUpOrUpdate">
           <div class="col-md-12">
             <div class="form-check-inline">
               <label class="form-check-label" for="gender">性別</label>
@@ -265,7 +280,7 @@ async function signUp(){
           </div>
           <div class="col-12 modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-            <button type="submit" class="btn btn-primary">新增</button>
+            <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
           </div>
         </form>
       </div>

@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable';
 import { toast } from 'vue3-toastify'
@@ -60,70 +60,62 @@ export const useTeachersAccountStore = defineStore('teachersAccount', () => {
     }
   }
 
-  // const { mutate: classAdviserSignUp } = useMutation(gql`
-  //   mutation classAdviserSignUp ($name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
-  //     classAdviserSignUp (input: {name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
-  //       classAdvisers {
-  //         id
-  //         email
-  //         name
-  //         profile {
-  //           cellphone
-  //         }
-  //         branchSchools {
-  //           name
-  //           code
-  //         }
-  //       }
-  //       success
-  //       message
-  //     }
-  //   }
-  // `, () => ({
-  //   variables: {
-  //     name: selectedClassAdviser.value.name,
-  //     email: selectedClassAdviser.value.email,
-  //     cellphone: selectedClassAdviserProfile.value.cellphone,
-  //     branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
-  //   },
-  // }))
+  async function mutationTeacherUpdate() {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation teacherUpdate($id: String! $name: String!, $email: String!, $gender: String!, $cellphone: String!, $school: String!, $major: String!, $branchSchools: [String!]!, $subjects: [String!]!) {
+          teacherUpdate (input: {id: $id, name: $name, email: $email, gender: $gender, cellphone: $cellphone, school: $school, major: $major, branchSchools: $branchSchools, subjects: $subjects }){
+            teachers {
+              id
+              email
+              name
+              profile {
+                gender
+                cellphone
+                school
+                major
+              }
+              branchSchools {
+                name
+              }
+              subjects {
+                name
+              }
+            }
+            success
+            message
+          }
+        }
+      `,
+      variables: {
+        id: selectedTeacher.value.id,
+        name: selectedTeacher.value.name,
+        email: selectedTeacher.value.email,
+        gender: selectedTeacherProfile.value.gender,
+        cellphone: selectedTeacherProfile.value.cellphone,
+        school: selectedTeacherProfile.value.school,
+        major: selectedTeacherProfile.value.major,
+        branchSchools: selectedTeacher.value.branchSchools,
+        subjects: selectedTeacher.value.subjects
+      },
+    });
 
-  // const { mutate: classAdviserUpdate } = useMutation(gql`
-  //   mutation classAdviserUpdate ($id: String!, $name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
-  //     classAdviserUpdate (input: {id: $id, name: $name, email: $email, cellphone: $cellphone, branchSchools: $branchSchools }) {
-  //       classAdvisers {
-  //         id
-  //         email
-  //         name
-  //         profile {
-  //           cellphone
-  //         }
-  //         branchSchools {
-  //           name
-  //           code
-  //         }
-  //       }
-  //       success
-  //       message
-  //     }
-  //   }
-  // `, () => ({
-  //   variables: {
-  //     id: selectedClassAdviser.value.id,
-  //     name: selectedClassAdviser.value.name,
-  //     email: selectedClassAdviser.value.email,
-  //     cellphone: selectedClassAdviserProfile.value.cellphone,
-  //     branchSchools: selectedClassAdviser.value.branchSchools.map(school => school.name)
-  //   },
-  // }))
+    if(response.data.teacherUpdate.success) {
+      teachers.value = response.data.teacherUpdate.teachers
+      return true
+    } else {
+      toast.error(response.data.teacherUpdate.message, { autoClose: 3000 })
+      return false
+    }
+  }
 
-  // const submitButtonText = computed(() => {
-  //   return selectedClassAdviser.value.id ? '更新' : '新增';
-  // })
+  const submitButtonText = computed(() => {
+    return selectedTeacher.value.id ? '更新' : '新增';
+  })
   
-  // const titleText = computed(() => {
-  //   return selectedClassAdviser.value.id ? '更新帳號' : '新增帳號';
-  // })
+  const titleText = computed(() => {
+    return selectedTeacher.value.id ? '更新帳號' : '新增帳號';
+  })
 
   async function fetchTeachers() {
     const { resolveClient } = useApolloClient();
@@ -172,13 +164,7 @@ export const useTeachersAccountStore = defineStore('teachersAccount', () => {
 
     selectedTeacherProfile.value = { ...profile }
     selectedTeacher.value = newTeacher
-
-    // console.log(selectedTeacher.value)
   }
 
-  // function reAssignClassAdvisers(reAssignClassAdvisers) {
-  //   classAdvisers.value = reAssignClassAdvisers
-  // }
-
-  return { teachers, selectedTeacher, selectedTeacherProfile, fetchTeachers, assignSelectedTeacher, mutationTeacherSignUp }
+  return { teachers, selectedTeacher, selectedTeacherProfile, titleText, submitButtonText, fetchTeachers, assignSelectedTeacher, mutationTeacherSignUp, mutationTeacherUpdate }
 })
