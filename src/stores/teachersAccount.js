@@ -11,6 +11,7 @@ export const useTeachersAccountStore = defineStore('teachersAccount', () => {
   const teachers = ref([])
   const selectedTeacher = ref({ id: '', email: '', name: '', branchSchools: [], subjects: [] })
   const selectedTeacherProfile = ref({ gender: '', cellphone: '', school: '', major: ''})
+  const filter = ref({ name: '', subjects: [] })
 
   async function mutationTeacherSignUp() {
     const response = await client.mutate({
@@ -166,5 +167,11 @@ export const useTeachersAccountStore = defineStore('teachersAccount', () => {
     selectedTeacher.value = newTeacher
   }
 
-  return { teachers, selectedTeacher, selectedTeacherProfile, titleText, submitButtonText, fetchTeachers, assignSelectedTeacher, mutationTeacherSignUp, mutationTeacherUpdate }
+  const filteredTeachers = computed(() => {
+    return teachers.value.filter((teacher) =>
+      teacher.name.includes(filter.value.name) && filter.value.subjects.every((item) => teacher.subjects.map((subject)=>(subject.name)).includes(item))
+    );
+  });
+
+  return { selectedTeacher, selectedTeacherProfile, titleText, submitButtonText, filter, fetchTeachers, assignSelectedTeacher, mutationTeacherSignUp, mutationTeacherUpdate, filteredTeachers }
 })
