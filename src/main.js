@@ -16,6 +16,8 @@ library.add(faGoogle, faFacebook, faUserSecret)
 
 
 import { createApp, provide, h } from 'vue'
+import { createI18n } from 'vue-i18n'
+import language from './language';
 import { createPinia } from 'pinia'
 
 import axios from 'axios'
@@ -43,6 +45,12 @@ const apolloClient = new ApolloClient({
   cache,
 })
 
+const i18n = createI18n({
+  locale: 'zh-TW',
+  fallbackLocale: 'zh-TW',
+  messages: language,
+})
+
 const app = createApp({
   setup () {
     provide(DefaultApolloClient, apolloClient)
@@ -57,5 +65,6 @@ app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())
 app.use(VueAxios, axios)
 app.use(router)
+app.use(i18n)
 
 app.mount('#app')

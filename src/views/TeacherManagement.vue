@@ -258,7 +258,7 @@ onMounted(() => {
                   </a>
                 </td>
                 <td>老師</td>
-                <td>{{ teacher.subjects.map(subject => subject.name).join(', ') }}</td>
+                <td>{{ teacher.subjects.map(subject => $t(subject.name)).join('、') }}</td>
               </tr>
             </template>
         </tbody>
