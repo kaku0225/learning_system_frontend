@@ -22,6 +22,10 @@ export const useBranchSchoolManagementStore = defineStore('branchSchoolManagemen
               phone
               address
               enabled
+              users {
+                name
+                type
+              }
             }
             success
             message
@@ -57,6 +61,10 @@ export const useBranchSchoolManagementStore = defineStore('branchSchoolManagemen
               phone
               address
               enabled
+              users {
+                name
+                type
+              }
             }
             success
             message
@@ -103,6 +111,10 @@ export const useBranchSchoolManagementStore = defineStore('branchSchoolManagemen
             phone
             address
             enabled
+            users {
+              name
+              type
+            }
           }
         }
       `,fetchPolicy: "no-cache"

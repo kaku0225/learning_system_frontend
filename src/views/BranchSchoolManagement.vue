@@ -44,8 +44,6 @@
             <th scope="col">分校電話</th>
             <th scope="col">分校地址</th>
             <th scope="col">班主任</th>
-            <th scope="col">班主任</th>
-            <th scope="col">班主任</th>
           </tr>
         </thead>
         <tbody>
@@ -58,9 +56,7 @@
               </td>
               <td>{{ brnachSchool.phone }}</td>
               <td>{{ brnachSchool.address }}</td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{ brnachSchool.users.filter(user => user.type === 'ClassAdviser').map(user => user.name).join('、') }}</td>
             </tr>
           </template>
         </tbody>
