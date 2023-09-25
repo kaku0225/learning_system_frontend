@@ -1,4 +1,19 @@
 <script setup>
+  import { storeToRefs } from 'pinia'
+  import { useAdministrationStaffsAccountStore } from "@/stores/administrationStaffsAccount.js"
+  const emits = defineEmits(['hideModal'])
+
+  const store = useAdministrationStaffsAccountStore()
+  const { mutationAdministrationStaffSignUp } = store
+  const { selectedAdministrationStaff, selectedAdministrationStaffProfile } = storeToRefs(store)
+
+  async function mutationSignUp(){
+  const hide = await mutationAdministrationStaffSignUp()
+  if(hide){
+    emits('hideModal')
+  }
+}
+
 </script>
 
 <template>
@@ -9,59 +24,59 @@
           <h5 class="modal-title" id="exampleModalLabel">新增行政人員</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="row g-3 p-3">
+        <form class="row g-3 p-3" @submit.prevent="mutationSignUp">
           <div class="col-md-12">
             <div class="form-check-inline">
               <label class="form-check-label" for="gender">性別</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="male" value="male">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="male" value="male" v-model="selectedAdministrationStaffProfile.gender">
               <label class="form-check-label" for="male">男</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="female" value="female">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="female" value="female" v-model="selectedAdministrationStaffProfile.gender">
               <label class="form-check-label" for="female">女</label>
             </div>
           </div>
           <div class="col-md-6">
             <label for="inputName" class="form-label">姓名</label>
-            <input type="text" class="form-control" id="inputName">
+            <input type="text" class="form-control" id="inputName" v-model="selectedAdministrationStaff.name">
           </div>
           <div class="col-md-6">
             <label for="inputCellphone" class="form-label">手機</label>
-            <input type="text" class="form-control" id="inputCellphone">
+            <input type="text" class="form-control" id="inputCellphone" v-model="selectedAdministrationStaffProfile.cellphone">
           </div>
           <div class="col-md-6">
             <label for="email" class="form-label">電子信箱</label>
-            <input type="email" class="form-control" id="email">
+            <input type="email" class="form-control" id="email" v-model="selectedAdministrationStaff.email">
           </div>
           <div class="col-md-3">
             <label for="school" class="form-label">畢業學校</label>
-            <input type="text" class="form-control" id="school">
+            <input type="text" class="form-control" id="school" v-model="selectedAdministrationStaffProfile.school">
           </div>
           <div class="col-md-3">
             <label for="department" class="form-label">科系</label>
-            <input type="text" class="form-control" id="department">
+            <input type="text" class="form-control" id="department" v-model="selectedAdministrationStaffProfile.major">
           </div>
           <div class="col-md-12">
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school1" value="option1">
+              <input class="form-check-input" type="checkbox" id="school1" value="school1" v-model="selectedAdministrationStaff.branchSchools">
               <label class="form-check-label" for="school1">分校1</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school2" value="option2">
+              <input class="form-check-input" type="checkbox" id="school2" value="school2" v-model="selectedAdministrationStaff.branchSchools">
               <label class="form-check-label" for="school2">分校2</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school3" value="option3">
+              <input class="form-check-input" type="checkbox" id="school3" value="school3" v-model="selectedAdministrationStaff.branchSchools">
               <label class="form-check-label" for="school3">分校3</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school4" value="option4">
+              <input class="form-check-input" type="checkbox" id="school4" value="school4" v-model="selectedAdministrationStaff.branchSchools">
               <label class="form-check-label" for="school4">分校4</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school5" value="option5">
+              <input class="form-check-input" type="checkbox" id="school5" value="school5" v-model="selectedAdministrationStaff.branchSchools">
               <label class="form-check-label" for="school5">分校5</label>
             </div>
           </div>

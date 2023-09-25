@@ -3,6 +3,13 @@ import { ref, onMounted } from 'vue';
 import Modal from 'bootstrap/js/dist/modal';
 import AdministrationStaffNewModal from '../components/AdministrationStaffNewModal.vue'
 
+import { storeToRefs } from 'pinia'
+import { useAdministrationStaffsAccountStore } from "@/stores/administrationStaffsAccount.js"
+
+const store = useAdministrationStaffsAccountStore()
+const { fetchAdministrationStaffs } = store
+const { administrationStaffs } = storeToRefs(store)
+
 
 const AdministrationStaffModal = ref({ modal: null })
 
@@ -10,7 +17,12 @@ function open(){
   AdministrationStaffModal.value.modal.show()
 }
 
+function hide(){
+  AdministrationStaffModal.value.modal.hide()
+}
+
 onMounted(() => {
+  fetchAdministrationStaffs()
   AdministrationStaffModal.value.modal = new Modal('#AdministrationStaffModal', {})
 })
 
@@ -44,14 +56,16 @@ onMounted(() => {
         <thead>
           <tr>
             <th scope="col">姓名</th>
-            <th scope="col">行政人員</th>
+            <th scope="col">身份</th>
           </tr>
         </thead>
         <tbody>
-            <tr>
-              <td>小明</td>
-              <td>行政人員</td>
-            </tr>
+            <template v-for="(staff, index) in administrationStaffs" :key="index">
+              <tr>
+                <td>{{ staff.name }}</td>
+                <td>行政人員</td>
+              </tr>
+            </template>
         </tbody>
       </table>
       <nav aria-label="...">
@@ -73,7 +87,7 @@ onMounted(() => {
       </nav>
     </div>
   </div>
-  <AdministrationStaffNewModal></AdministrationStaffNewModal>
+  <AdministrationStaffNewModal @hideModal="hide"></AdministrationStaffNewModal>
 </template>
 
 <style scoped>
