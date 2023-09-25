@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable';
 import { toast } from 'vue3-toastify'
@@ -11,6 +11,14 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
   const administrationStaffs = ref([])
   const selectedAdministrationStaff = ref({ id: '', email: '', name: '', branchSchools: [] })
   const selectedAdministrationStaffProfile = ref({ gender: '', cellphone: '', school: '', major: ''})
+
+  const submitButtonText = computed(() => {
+    return selectedAdministrationStaff.value.id ? '更新' : '新增';
+  })
+  
+  const titleText = computed(() => {
+    return selectedAdministrationStaff.value.id ? '更新帳號' : '新增帳號';
+  })
 
   async function mutationAdministrationStaffSignUp() {
     const response = await client.mutate({
@@ -57,6 +65,52 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
     }
   }
 
+  async function mutationAdministrationStaffUpdate() {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation administrationStaffUpdate($id: String!, $name: String!, $email: String!, $gender: String!, $cellphone: String!, $school: String!, $major: String!, $branchSchools: [String!]!) {
+          administrationStaffUpdate (input: {id: $id, name: $name, email: $email, gender: $gender, cellphone: $cellphone, school: $school, major: $major, branchSchools: $branchSchools }){
+            administrationStaffs {
+              id
+              email
+              name
+              profile {
+                gender
+                cellphone
+                school
+                major
+              }
+              branchSchools {
+                name
+              }
+            }
+            success
+            message
+          }
+        }
+      `,
+      variables: {
+        id: selectedAdministrationStaff.value.id,
+        name: selectedAdministrationStaff.value.name,
+        email: selectedAdministrationStaff.value.email,
+        gender: selectedAdministrationStaffProfile.value.gender,
+        cellphone: selectedAdministrationStaffProfile.value.cellphone,
+        school: selectedAdministrationStaffProfile.value.school,
+        major: selectedAdministrationStaffProfile.value.major,
+        branchSchools: selectedAdministrationStaff.value.branchSchools,
+        subjects: selectedAdministrationStaff.value.subjects
+      },
+    });
+
+    if(response.data.administrationStaffUpdate.success) {
+      administrationStaffs.value = response.data.administrationStaffUpdate.administrationStaffs
+      return true
+    } else {
+      toast.error(response.data.administrationStaffUpdate.message, { autoClose: 3000 })
+      return false
+    }
+  }
+
   async function fetchAdministrationStaffs() {
     const { resolveClient } = useApolloClient();
     const client = resolveClient()
@@ -87,5 +141,19 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
     }
   }
 
-  return { administrationStaffs, selectedAdministrationStaff, selectedAdministrationStaffProfile, fetchAdministrationStaffs, mutationAdministrationStaffSignUp }
+  function assignSelectedAdministrationStaff(staff){
+    const { profile, branchSchools, ...selectedWithoutProfile } = staff;
+
+    const schoolNames = branchSchools.map(school => school.name);
+
+    const newStaff = {
+      ...selectedWithoutProfile,
+      branchSchools: schoolNames,
+    };
+
+    selectedAdministrationStaffProfile.value = { ...profile }
+    selectedAdministrationStaff.value = newStaff
+  }
+
+  return { administrationStaffs, selectedAdministrationStaff, selectedAdministrationStaffProfile, submitButtonText, titleText, fetchAdministrationStaffs, mutationAdministrationStaffSignUp, assignSelectedAdministrationStaff, mutationAdministrationStaffUpdate }
 })

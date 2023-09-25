@@ -7,13 +7,18 @@ import { storeToRefs } from 'pinia'
 import { useAdministrationStaffsAccountStore } from "@/stores/administrationStaffsAccount.js"
 
 const store = useAdministrationStaffsAccountStore()
-const { fetchAdministrationStaffs } = store
+const { fetchAdministrationStaffs, assignSelectedAdministrationStaff } = store
 const { administrationStaffs } = storeToRefs(store)
 
 
 const AdministrationStaffModal = ref({ modal: null })
 
-function open(){
+function open(staff){
+  if(staff) {
+    assignSelectedAdministrationStaff(staff)
+  } else {
+    assignSelectedAdministrationStaff({id: '', email: '', name: '', profile: { gender: '', cellphone: '', school: '', major: '' }, branchSchools: [] })
+  }
   AdministrationStaffModal.value.modal.show()
 }
 
@@ -37,7 +42,7 @@ onMounted(() => {
       <br>
       <div class="d-flex justify-content-between">
         <div>
-          <button type="button" class="btn btn-primary" @click="open">新增行政人員</button>
+          <button type="button" class="btn btn-primary" @click="open('')">新增行政人員</button>
         </div>
         <div>
           <form class="form-inline my-2 my-lg-0">
@@ -62,7 +67,11 @@ onMounted(() => {
         <tbody>
             <template v-for="(staff, index) in administrationStaffs" :key="index">
               <tr>
-                <td>{{ staff.name }}</td>
+                <td>
+                  <a href="#" @click="open(staff)">
+                    {{ staff.name }}
+                  </a>
+                </td>
                 <td>行政人員</td>
               </tr>
             </template>
