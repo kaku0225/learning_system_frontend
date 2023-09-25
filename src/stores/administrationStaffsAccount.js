@@ -11,6 +11,7 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
   const administrationStaffs = ref([])
   const selectedAdministrationStaff = ref({ id: '', email: '', name: '', branchSchools: [] })
   const selectedAdministrationStaffProfile = ref({ gender: '', cellphone: '', school: '', major: ''})
+  const filter = ref({ name: '' })
 
   const submitButtonText = computed(() => {
     return selectedAdministrationStaff.value.id ? '更新' : '新增';
@@ -19,6 +20,12 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
   const titleText = computed(() => {
     return selectedAdministrationStaff.value.id ? '更新帳號' : '新增帳號';
   })
+
+  const filteredAdministrationStaffs = computed(() => {
+    return administrationStaffs.value.filter((staff) =>
+      staff.name.includes(filter.value.name)
+    );
+  });
 
   async function mutationAdministrationStaffSignUp() {
     const response = await client.mutate({
@@ -155,5 +162,5 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
     selectedAdministrationStaff.value = newStaff
   }
 
-  return { administrationStaffs, selectedAdministrationStaff, selectedAdministrationStaffProfile, submitButtonText, titleText, fetchAdministrationStaffs, mutationAdministrationStaffSignUp, assignSelectedAdministrationStaff, mutationAdministrationStaffUpdate }
+  return { filteredAdministrationStaffs, selectedAdministrationStaff, selectedAdministrationStaffProfile, submitButtonText, titleText, filter, fetchAdministrationStaffs, mutationAdministrationStaffSignUp, assignSelectedAdministrationStaff, mutationAdministrationStaffUpdate }
 })

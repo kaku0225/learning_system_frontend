@@ -8,7 +8,7 @@ import { useAdministrationStaffsAccountStore } from "@/stores/administrationStaf
 
 const store = useAdministrationStaffsAccountStore()
 const { fetchAdministrationStaffs, assignSelectedAdministrationStaff } = store
-const { administrationStaffs } = storeToRefs(store)
+const { filteredAdministrationStaffs, filter } = storeToRefs(store)
 
 
 const AdministrationStaffModal = ref({ modal: null })
@@ -48,7 +48,7 @@ onMounted(() => {
           <form class="form-inline my-2 my-lg-0">
             <div class="d-flex">
               <div>
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" v-model="filter.name">
               </div>
               <div>
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -65,7 +65,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-            <template v-for="(staff, index) in administrationStaffs" :key="index">
+            <template v-for="(staff, index) in filteredAdministrationStaffs" :key="index">
               <tr>
                 <td>
                   <a href="#" @click="open(staff)">
