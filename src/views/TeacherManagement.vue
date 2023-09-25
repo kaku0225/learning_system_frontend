@@ -35,207 +35,206 @@ onMounted(() => {
 <template>
   <h2>老師管理</h2>
   <hr>
-  <form class="form-inline my-2 my-lg-0">
+  <div class="d-flex">
+    <div>
+      <div class="input-group rounded">
+        <input type="search" class="form-control rounded" placeholder="Search Name" aria-label="Search" aria-describedby="search-addon" v-model="filter.name" />
+        <span class="input-group-text border-0" id="search-addon">
+          <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
     <div class="d-flex">
       <div>
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" v-model="filter.name">
+        <label class="form-check-label" for="inlineCheckbox1">依科目篩選：</label>
       </div>
       <div>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <table class="table table-borderless">
+          <tbody>
+              <tr>
+                <th scope="row" class="text-center border" style="width:75px;">國小</th>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="elementarySchoolChinese" value="elementarySchoolChinese" v-model="filter.subjects">
+                    <label class="form-check-label" for="elementarySchoolChinese">國文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="elementarySchoolEnglish" value="elementarySchoolEnglish" v-model="filter.subjects">
+                    <label class="form-check-label" for="elementarySchoolEnglish">英文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="elementarySchoolMath" value="elementarySchoolMath" v-model="filter.subjects">
+                    <label class="form-check-label" for="elementarySchoolMath">數學</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="elementarySchoolScience" value="elementarySchoolScience" v-model="filter.subjects">
+                    <label class="form-check-label" for="elementarySchoolScience">自然</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="elementarySchoolSocialStudies" value="elementarySchoolSocialStudies" v-model="filter.subjects">
+                    <label class="form-check-label" for="elementarySchoolSocialStudies">社會</label>
+                  </div>
+                </td>
+                <td class="last_td" colspan="5"></td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center border" style="width:75px;">國中</th>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolChinese" value="juniorHighSchoolChinese" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolChinese">國文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolEnglish" value="juniorHighSchoolEnglish" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolEnglish">英文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolMath" value="juniorHighSchoolMath" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolMath">數學</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolBiology" value="juniorHighSchoolBiology" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolBiology">生物</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolPhysicsAndChemistry" value="juniorHighSchoolPhysicsAndChemistry" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolPhysicsAndChemistry">理化</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolEarthScience" value="juniorHighSchoolEarthScience" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolEarthScience">地球科學</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolGeography" value="juniorHighSchoolGeography" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolGeography">地理</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolHistory" value="juniorHighSchoolHistory" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolHistory">歷史</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="juniorHighSchoolCivics" value="juniorHighSchoolCivics" v-model="filter.subjects">
+                    <label class="form-check-label" for="juniorHighSchoolCivics">公民</label>
+                  </div>
+                </td>
+                <td class="last_td" colspan="1"></td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center border" style="width:75px;">高中</th>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolChinese" value="highSchoolChinese" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolChinese">國文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolEnglish" value="highSchoolEnglish" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolEnglish">英文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolMath" value="highSchoolMath" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolMath">數學</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolBiology" value="highSchoolBiology" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolBiology">生物</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolPhysics" value="highSchoolPhysics" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolPhysics">物理</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolChemistry" value="highSchoolChemistry" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolChemistry">化學</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolEarthScience" value="highSchoolEarthScience" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolEarthScience">地球科學</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolGeography" value="highSchoolGeography" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolGeography">地理</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolHistory" value="highSchoolHistory" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolHistory">歷史</label>
+                  </div>
+                </td>
+                <td class="last_td">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="highSchoolCivics" value="highSchoolCivics" v-model="filter.subjects">
+                    <label class="form-check-label" for="highSchoolCivics">公民</label>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center border" style="width:75px;">高職</th>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="vocationalHighSchoolChinese" value="vocationalHighSchoolChinese" v-model="filter.subjects">
+                    <label class="form-check-label" for="vocationalHighSchoolChinese">國文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="vocationalHighSchoolEnglish" value="vocationalHighSchoolEnglish" v-model="filter.subjects">
+                    <label class="form-check-label" for="vocationalHighSchoolEnglish">英文</label>
+                  </div>
+                </td>
+                <td class="border-top border-bottom">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="vocationalHighSchoolMath" value="vocationalHighSchoolMath" v-model="filter.subjects">
+                    <label class="form-check-label" for="vocationalHighSchoolMath">數學</label>
+                  </div>
+                </td>
+                <td class="last_td" colspan="7"></td>
+              </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-
-    <div class="mt-5">
-      <div class="d-flex">
-        <div>
-          <label class="form-check-label" for="inlineCheckbox1">依科目篩選：</label>
-        </div>
-        <div>
-          <table class="table table-borderless">
-            <tbody>
-                <tr>
-                  <th scope="row" class="text-center border" style="width:75px;">國小</th>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="elementarySchoolChinese" value="elementarySchoolChinese" v-model="filter.subjects">
-                      <label class="form-check-label" for="elementarySchoolChinese">國文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="elementarySchoolEnglish" value="elementarySchoolEnglish" v-model="filter.subjects">
-                      <label class="form-check-label" for="elementarySchoolEnglish">英文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="elementarySchoolMath" value="elementarySchoolMath" v-model="filter.subjects">
-                      <label class="form-check-label" for="elementarySchoolMath">數學</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="elementarySchoolScience" value="elementarySchoolScience" v-model="filter.subjects">
-                      <label class="form-check-label" for="elementarySchoolScience">自然</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="elementarySchoolSocialStudies" value="elementarySchoolSocialStudies" v-model="filter.subjects">
-                      <label class="form-check-label" for="elementarySchoolSocialStudies">社會</label>
-                    </div>
-                  </td>
-                  <td class="last_td" colspan="5"></td>
-                </tr>
-                <tr>
-                  <th scope="row" class="text-center border" style="width:75px;">國中</th>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolChinese" value="juniorHighSchoolChinese" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolChinese">國文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolEnglish" value="juniorHighSchoolEnglish" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolEnglish">英文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolMath" value="juniorHighSchoolMath" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolMath">數學</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolBiology" value="juniorHighSchoolBiology" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolBiology">生物</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolPhysicsAndChemistry" value="juniorHighSchoolPhysicsAndChemistry" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolPhysicsAndChemistry">理化</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolEarthScience" value="juniorHighSchoolEarthScience" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolEarthScience">地球科學</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolGeography" value="juniorHighSchoolGeography" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolGeography">地理</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolHistory" value="juniorHighSchoolHistory" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolHistory">歷史</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="juniorHighSchoolCivics" value="juniorHighSchoolCivics" v-model="filter.subjects">
-                      <label class="form-check-label" for="juniorHighSchoolCivics">公民</label>
-                    </div>
-                  </td>
-                  <td class="last_td" colspan="1"></td>
-                </tr>
-                <tr>
-                  <th scope="row" class="text-center border" style="width:75px;">高中</th>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolChinese" value="highSchoolChinese" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolChinese">國文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolEnglish" value="highSchoolEnglish" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolEnglish">英文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolMath" value="highSchoolMath" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolMath">數學</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolBiology" value="highSchoolBiology" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolBiology">生物</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolPhysics" value="highSchoolPhysics" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolPhysics">物理</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolChemistry" value="highSchoolChemistry" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolChemistry">化學</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolEarthScience" value="highSchoolEarthScience" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolEarthScience">地球科學</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolGeography" value="highSchoolGeography" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolGeography">地理</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolHistory" value="highSchoolHistory" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolHistory">歷史</label>
-                    </div>
-                  </td>
-                  <td class="last_td">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="highSchoolCivics" value="highSchoolCivics" v-model="filter.subjects">
-                      <label class="form-check-label" for="highSchoolCivics">公民</label>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row" class="text-center border" style="width:75px;">高職</th>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="vocationalHighSchoolChinese" value="vocationalHighSchoolChinese" v-model="filter.subjects">
-                      <label class="form-check-label" for="vocationalHighSchoolChinese">國文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="vocationalHighSchoolEnglish" value="vocationalHighSchoolEnglish" v-model="filter.subjects">
-                      <label class="form-check-label" for="vocationalHighSchoolEnglish">英文</label>
-                    </div>
-                  </td>
-                  <td class="border-top border-bottom">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="checkbox" id="vocationalHighSchoolMath" value="vocationalHighSchoolMath" v-model="filter.subjects">
-                      <label class="form-check-label" for="vocationalHighSchoolMath">數學</label>
-                    </div>
-                  </td>
-                  <td class="last_td" colspan="7"></td>
-                </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </form>
+  </div>
   <hr>
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="class-home-work" role="tabpanel" aria-labelledby="class-home-work-tab">

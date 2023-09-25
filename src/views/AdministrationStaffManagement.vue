@@ -45,16 +45,12 @@ onMounted(() => {
           <button type="button" class="btn btn-primary" @click="open('')">新增行政人員</button>
         </div>
         <div>
-          <form class="form-inline my-2 my-lg-0">
-            <div class="d-flex">
-              <div>
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" v-model="filter.name">
-              </div>
-              <div>
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </div>
-            </div>
-          </form>
+          <div class="input-group rounded">
+            <input type="search" class="form-control rounded" placeholder="Search Name" aria-label="Search" aria-describedby="search-addon" v-model="filter.name" />
+            <span class="input-group-text border-0" id="search-addon">
+              <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+            </span>
+          </div>
         </div>
       </div>
       <table class="table table-bordered" style="margin-top: 30px">
