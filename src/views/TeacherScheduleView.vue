@@ -1,76 +1,90 @@
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useApolloClient } from '@vue/apollo-composable';
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from './event-utils'
+import gql from 'graphql-tag'
+import ScheduleNewModal from '../components/ScheduleNewModal.vue'
+import Modal from 'bootstrap/js/dist/modal';
+import { storeToRefs } from 'pinia'
+import { useTeachersScheduleStore } from "@/stores/teachersSchedule.js"
 
-export default defineComponent({
-  components: {
-    FullCalendar,
-  },
-  data() {
-    return {
-      calendarOptions: {
-        plugins: [
-          dayGridPlugin,
-          timeGridPlugin,
-          interactionPlugin // needed for dateClick
-        ],
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        initialView: 'dayGridMonth',
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        weekends: true,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
-      },
-      currentEvents: [],
-    }
-  },
-  methods: {
-    handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
-    },
-    handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event')
-      let calendarApi = selectInfo.view.calendar
+  const { resolveClient } = useApolloClient();
+  const client = resolveClient()
 
-      calendarApi.unselect() // clear date selection
+  const store = useTeachersScheduleStore()
+  const { fetchTeachers, assignSelectedDate, handleEventChange } = store
+  const { currentEvents, todayEvent } = storeToRefs(store)
 
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        })
-      }
+  const ScheduleModal = ref({ modal: null })
+
+  const calendarOptions = ref({
+    plugins: [
+      dayGridPlugin,
+      timeGridPlugin,
+      interactionPlugin // needed for dateClick
+    ],
+    headerToolbar: {
+      // left: 'prev,next today',
+      // center: 'title',
+      // right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
-    handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove()
-      }
-    },
-    handleEvents(events) {
-      this.currentEvents = events
-    },
+    initialView: 'dayGridMonth',
+    events: [], // alternatively, use the `events` setting to fetch from a feed
+    editable: true,
+    selectable: true,
+    selectMirror: true,
+    dayMaxEvents: true,
+    weekends: true,
+    select: handleDateSelect,
+    // eventClick: handleEventClick,
+    eventChange: handleEventChange,
+    eventsSet: handleEvents
+    /* you can update a remote database when these fire:
+    eventAdd:
+    eventRemove:
+    */
+  })
+
+  function handleWeekendsToggle() {
+    calendarOptions.value.weekends = !calendarOptions.value.weekends // update a property
   }
+
+  function handleDateSelect(selectInfo) {
+    assignSelectedDate(selectInfo)
+    ScheduleModal.value.modal.show()
+  }
+
+  function handleEvents(events) {
+    currentEvents.value = events
+  }
+
+  async function fetchSchedules() {
+    const response = await client.query({
+      query: gql`
+        query {
+          schedules {
+            id
+            title
+            start
+            end
+            allDay
+          }
+        }
+      `,fetchPolicy: "no-cache"
+    });
+
+    if (response.data.schedules) {
+      calendarOptions.value.events = response.data.schedules
+    }
+  }
+
+onMounted(() => {
+  fetchSchedules()
+  fetchTeachers()
+  ScheduleModal.value.modal = new Modal('#ScheduleModal', {})
 })
 
 </script>
@@ -78,14 +92,14 @@ export default defineComponent({
 <template>
   <div class='calendar-demo-app'>
     <div class='calendar-demo-app-sidebar'>
-      <div class='calendar-demo-app-sidebar-section'>
-        <h2 class="calendarTitle">Instructions</h2>
+      <!-- <div class='calendar-demo-app-sidebar-section'> -->
+        <!-- <h2 class="calendarTitle">Instructions</h2>
         <ul class="calendarUl">
           <li class="calendarLi">Select dates and you will be prompted to create a new event</li>
           <li class="calendarLi">Drag, drop, and resize events</li>
           <li class="calendarLi">Click an event to delete it</li>
-        </ul>
-      </div>
+        </ul> -->
+      <!-- </div> -->
       <div class='calendar-demo-app-sidebar-section'>
         <label>
           <input
@@ -93,13 +107,13 @@ export default defineComponent({
             :checked='calendarOptions.weekends'
             @change='handleWeekendsToggle'
           />
-          toggle weekends
+          顯示假日
         </label>
       </div>
       <div class='calendar-demo-app-sidebar-section'>
-        <h2>All Events ({{ currentEvents.length }})</h2>
+        <h2>今日輔導老師 ({{ todayEvent.length }})</h2>
         <ul class="calendarUl">
-          <li class="calendarLi" v-for='event in currentEvents' :key='event.id'>
+          <li class="calendarLi" v-for='event in todayEvent' :key='event.id'>
             <b>{{ event.startStr }}</b>
             <i>{{ event.title }}</i>
           </li>
@@ -118,6 +132,7 @@ export default defineComponent({
       </FullCalendar>
     </div>
   </div>
+  <ScheduleNewModal></ScheduleNewModal>
 </template>
 
 <style lang='css'>
