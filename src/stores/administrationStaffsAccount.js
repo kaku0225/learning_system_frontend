@@ -12,6 +12,7 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
   const selectedAdministrationStaff = ref({ id: '', email: '', name: '', branchSchools: [] })
   const selectedAdministrationStaffProfile = ref({ gender: '', cellphone: '', school: '', major: ''})
   const filter = ref({ name: '' })
+  const branchSchools = ref([])
 
   const submitButtonText = computed(() => {
     return selectedAdministrationStaff.value.id ? '更新' : '新增';
@@ -162,5 +163,25 @@ export const useAdministrationStaffsAccountStore = defineStore('administrationSt
     selectedAdministrationStaff.value = newStaff
   }
 
-  return { filteredAdministrationStaffs, selectedAdministrationStaff, selectedAdministrationStaffProfile, submitButtonText, titleText, filter, fetchAdministrationStaffs, mutationAdministrationStaffSignUp, assignSelectedAdministrationStaff, mutationAdministrationStaffUpdate }
+  async function fetchBranchSchools() {
+    const response = await client.query({
+      query: gql`
+        query {
+          branchSchools {
+            id
+            name
+            phone
+            address
+            enabled
+          }
+        }
+      `,fetchPolicy: "no-cache"
+    });
+
+    if (response.data.branchSchools) {
+      branchSchools.value = response.data.branchSchools
+    }
+  }
+
+  return { filteredAdministrationStaffs, selectedAdministrationStaff, selectedAdministrationStaffProfile, submitButtonText, titleText, filter, branchSchools, fetchAdministrationStaffs, mutationAdministrationStaffSignUp, assignSelectedAdministrationStaff, mutationAdministrationStaffUpdate, fetchBranchSchools }
 })

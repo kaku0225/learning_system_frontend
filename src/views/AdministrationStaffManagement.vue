@@ -7,13 +7,14 @@ import { storeToRefs } from 'pinia'
 import { useAdministrationStaffsAccountStore } from "@/stores/administrationStaffsAccount.js"
 
 const store = useAdministrationStaffsAccountStore()
-const { fetchAdministrationStaffs, assignSelectedAdministrationStaff } = store
+const { fetchAdministrationStaffs, assignSelectedAdministrationStaff, fetchBranchSchools } = store
 const { filteredAdministrationStaffs, filter } = storeToRefs(store)
 
 
 const AdministrationStaffModal = ref({ modal: null })
 
 function open(staff){
+  fetchBranchSchools();
   if(staff) {
     assignSelectedAdministrationStaff(staff)
   } else {
