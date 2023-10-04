@@ -12,6 +12,7 @@ export const useTeachersAccountStore = defineStore('teachersAccount', () => {
   const selectedTeacher = ref({ id: '', email: '', name: '', branchSchools: [], subjects: [] })
   const selectedTeacherProfile = ref({ gender: '', cellphone: '', school: '', major: ''})
   const filter = ref({ name: '', subjects: [] })
+  const branchSchools = ref([])
 
   async function mutationTeacherSignUp() {
     const response = await client.mutate({
@@ -118,6 +119,12 @@ export const useTeachersAccountStore = defineStore('teachersAccount', () => {
     return selectedTeacher.value.id ? '更新帳號' : '新增帳號';
   })
 
+  const filteredTeachers = computed(() => {
+    return teachers.value.filter((teacher) =>
+      teacher.name.includes(filter.value.name) && filter.value.subjects.every((item) => teacher.subjects.map((subject)=>(subject.name)).includes(item))
+    );
+  });
+
   async function fetchTeachers() {
     const { resolveClient } = useApolloClient();
     const client = resolveClient()
@@ -167,11 +174,25 @@ export const useTeachersAccountStore = defineStore('teachersAccount', () => {
     selectedTeacher.value = newTeacher
   }
 
-  const filteredTeachers = computed(() => {
-    return teachers.value.filter((teacher) =>
-      teacher.name.includes(filter.value.name) && filter.value.subjects.every((item) => teacher.subjects.map((subject)=>(subject.name)).includes(item))
-    );
-  });
+  async function fetchBranchSchools() {
+    const response = await client.query({
+      query: gql`
+        query {
+          branchSchools {
+            id
+            name
+            phone
+            address
+            enabled
+          }
+        }
+      `,fetchPolicy: "no-cache"
+    });
 
-  return { selectedTeacher, selectedTeacherProfile, titleText, submitButtonText, filter, fetchTeachers, assignSelectedTeacher, mutationTeacherSignUp, mutationTeacherUpdate, filteredTeachers }
+    if (response.data.branchSchools) {
+      branchSchools.value = response.data.branchSchools
+    }
+  }
+
+  return { selectedTeacher, selectedTeacherProfile, titleText, submitButtonText, filter, filteredTeachers, branchSchools, fetchTeachers, assignSelectedTeacher, mutationTeacherSignUp, mutationTeacherUpdate, fetchBranchSchools }
 })

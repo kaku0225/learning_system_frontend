@@ -6,12 +6,13 @@ import { storeToRefs } from 'pinia'
 import { useTeachersAccountStore } from "@/stores/teachersAccount.js"
 
 const store = useTeachersAccountStore()
-const { fetchTeachers, assignSelectedTeacher } = store
+const { fetchTeachers, assignSelectedTeacher, fetchBranchSchools } = store
 const { filteredTeachers, filter } = storeToRefs(store)
 
 const TeacherModal = ref({ modal: null })
 
 function open(teacher) {
+  fetchBranchSchools()
   if(teacher) {
     assignSelectedTeacher(teacher)
   } else {

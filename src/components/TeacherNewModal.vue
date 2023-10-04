@@ -5,7 +5,7 @@ import { useTeachersAccountStore } from "@/stores/teachersAccount.js"
 const emits = defineEmits(['hideModal'])
 const store = useTeachersAccountStore()
 const { mutationTeacherSignUp, mutationTeacherUpdate } = store
-const { selectedTeacher, selectedTeacherProfile, titleText, submitButtonText } = storeToRefs(store)
+const { selectedTeacher, selectedTeacherProfile, titleText, submitButtonText, branchSchools } = storeToRefs(store)
 
 async function mutationSignUp(){
   const hide = await mutationTeacherSignUp()
@@ -257,26 +257,12 @@ function signUpOrUpdate() {
             </table>
           </div>
           <div class="col-md-12">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school1" value="school1" v-model="selectedTeacher.branchSchools">
-              <label class="form-check-label" for="school1">分校1</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school2" value="school2" v-model="selectedTeacher.branchSchools">
-              <label class="form-check-label" for="school2">分校2</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school3" value="school3" v-model="selectedTeacher.branchSchools">
-              <label class="form-check-label" for="school3">分校3</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school4" value="school4" v-model="selectedTeacher.branchSchools">
-              <label class="form-check-label" for="school4">分校4</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="school5" value="school5" v-model="selectedTeacher.branchSchools">
-              <label class="form-check-label" for="school5">分校5</label>
-            </div>
+            <template v-for="(branchSchool, index) in branchSchools" :key="index">              
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" :id="branchSchool.name" :value="branchSchool.name" v-model="selectedTeacher.branchSchools">
+                <label class="form-check-label" :for="branchSchool.name">{{ branchSchool.name }}</label>
+              </div>
+            </template>
           </div>
           <div class="col-12 modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
