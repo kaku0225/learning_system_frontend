@@ -6,12 +6,13 @@
   import { useClassAdvisersAccountStore } from "@/stores/classAdvisersAccount.js"
 
   const store = useClassAdvisersAccountStore()
-  const { fetchClassAdvisers, assignSelectedClassAdviser } = store
+  const { fetchClassAdvisers, assignSelectedClassAdviser, fetchBranchSchools } = store
   const { classAdvisers } = storeToRefs(store)
 
   const ClassAdviserModal = ref({ modal: null })
 
   function open(classAdviser) {
+    fetchBranchSchools()
     if(classAdviser) {
       assignSelectedClassAdviser(classAdviser)
     } else {

@@ -5,9 +5,12 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
 export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', () => {
+  const { resolveClient } = useApolloClient();
+  const client = resolveClient()
   const classAdvisers = ref([])
   const selectedClassAdviser = ref({ id: '', email: '', name: '', branch_schools: [] })
   const selectedClassAdviserProfile = ref({ cellphone: ''})
+  const branchSchools = ref([])
 
   const { mutate: classAdviserSignUp } = useMutation(gql`
     mutation classAdviserSignUp ($name: String!, $email: String!, $cellphone: String!, $branchSchools: [String!]!) {
@@ -75,9 +78,6 @@ export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', 
   })
 
   async function fetchClassAdvisers() {
-    const { resolveClient } = useApolloClient();
-    const client = resolveClient()
-
     const response = await client.query({
       query: gql`
         query {
@@ -121,5 +121,26 @@ export const useClassAdvisersAccountStore = defineStore('classAdvisersAccount', 
     classAdvisers.value = reAssignClassAdvisers
   }
 
-  return { classAdvisers, selectedClassAdviser, selectedClassAdviserProfile, submitButtonText, titleText, fetchClassAdvisers, assignSelectedClassAdviser, classAdviserSignUp, classAdviserUpdate, reAssignClassAdvisers }
+  async function fetchBranchSchools() {
+    const response = await client.query({
+      query: gql`
+        query {
+          branchSchools {
+            id
+            name
+            phone
+            address
+            enabled
+            code
+          }
+        }
+      `,fetchPolicy: "no-cache"
+    });
+
+    if (response.data.branchSchools) {
+      branchSchools.value = response.data.branchSchools
+    }
+  }
+
+  return { classAdvisers, selectedClassAdviser, selectedClassAdviserProfile, submitButtonText, titleText, branchSchools, fetchClassAdvisers, assignSelectedClassAdviser, classAdviserSignUp, classAdviserUpdate, reAssignClassAdvisers, fetchBranchSchools }
 })

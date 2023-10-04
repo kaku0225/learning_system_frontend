@@ -8,20 +8,14 @@ import { toast } from 'vue3-toastify'
 const emits = defineEmits(['hideModal'])
 const store = useClassAdvisersAccountStore()
 const { classAdviserSignUp, classAdviserUpdate, reAssignClassAdvisers } = store
-const { selectedClassAdviser, selectedClassAdviserProfile, submitButtonText, titleText } = storeToRefs(store)
-
-const options = [
-  { name: 'Vue.js', code: 'vu' },
-  { name: 'Javascript', code: 'js' },
-  { name: 'Open Source', code: 'os' }
-]
+const { selectedClassAdviser, selectedClassAdviserProfile, submitButtonText, titleText, branchSchools } = storeToRefs(store)
 
 function addTag(newTag){
   const tag = {
     name: newTag,
     code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
   }
-  options.value.push(tag)
+  branchSchools.value.push(tag)
   selectedClassAdviser.value.push(tag)
 }
 
@@ -80,7 +74,7 @@ function mutationSignUp(){
           </div>
           <div class="col-md-6">
             <label class="typo__label form-label">負責分校</label>
-            <multiselect v-model="selectedClassAdviser.branchSchools" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="code" :options="options" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+            <multiselect v-model="selectedClassAdviser.branchSchools" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="code" :options="branchSchools" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
           </div>
           <div class="col-12 modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
