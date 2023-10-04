@@ -46,6 +46,7 @@ import { useTeachersScheduleStore } from "@/stores/teachersSchedule.js"
     eventAdd:
     eventRemove:
     */
+    // eventDragStop:
   })
 
   function handleWeekendsToggle() {

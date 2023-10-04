@@ -51,6 +51,27 @@ export const useTeachersScheduleStore = defineStore('teachersSchedule', () => {
     }
   }
 
+  async function scheduleDuplicate(event) {
+    const response = await client.query({
+      query: gql`
+        query ScheduleDuplicate($title: String!, $start: ISO8601DateTime!, $endTime: ISO8601DateTime!, $allDay: Boolean!) {
+          scheduleDuplicate(title: $title, start: $start, endTime: $endTime, allDay: $allDay)
+        }
+      `,
+      variables: {
+        title: event.title,
+        start: event.start,
+        endTime: event.end,
+        allDay: event.allDay
+      },
+      fetchPolicy: "no-cache",
+    });
+
+    if (response.data) {
+      return response.data.scheduleDuplicate
+    }
+  }
+
   async function mutationScheduleCreateOrDestroy(teacher) {
     const response = await client.mutate({
       mutation: gql`
@@ -109,8 +130,9 @@ export const useTeachersScheduleStore = defineStore('teachersSchedule', () => {
   }
 
   async function handleEventChange(event){
-    if (currentEvents.value.some((currentEvent) => new Date(currentEvent.start).getTime() / 1000 === new Date(event.event.start).getTime() / 1000 && currentEvent.title === event.event.title)) {
-      toast.error('目標日期已安排老師，無法重複安排', { autoClose: 1000 })
+    let isScheduleDuplicate = await scheduleDuplicate(event.event)
+    if (isScheduleDuplicate) {
+      toast.error('目標日期已安排相同老師，無法重複安排', { autoClose: 1000 })
       setTimeout(() => {
         window.location.href = '/class_adviser_interface/teacher_schedule'
       }, 1500);
@@ -149,7 +171,6 @@ export const useTeachersScheduleStore = defineStore('teachersSchedule', () => {
       toast.error(response.data.scheduleUpdate.message, { autoClose: 3000 })
     }
   }
-  
 
   return { teachers, currentEvents, selectedDate, hasMatchingDate, todayEvent, fetchTeachers, mutationScheduleCreateOrDestroy, assignSelectedDate, handleEventChange }
 })
