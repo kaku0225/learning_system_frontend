@@ -7,6 +7,9 @@ import router from '../router';
 import 'vue3-toastify/dist/index.css'
 
 export const useSignUpStore = defineStore('signUp', () => {
+  const { resolveClient } = useApolloClient();
+  const client = resolveClient()
+
   const student = ref({
     info: {    
       name: '',
@@ -26,6 +29,8 @@ export const useSignUpStore = defineStore('signUp', () => {
     },
     branchSchools: []
   })
+
+  const branchSchools = ref([])
 
   const showGradeSubSelect = ref({
     elementary: true,
@@ -54,8 +59,6 @@ export const useSignUpStore = defineStore('signUp', () => {
   }
 
   async function mutationSignUp() {
-    const { resolveClient } = useApolloClient();
-    const client = resolveClient()
     const response = await client.mutate({
       mutation: gql`
         mutation studentSignUp($info: UserInput!, $profile: StudentProfileInput!, $branchSchools: [String!]!) {
@@ -84,5 +87,25 @@ export const useSignUpStore = defineStore('signUp', () => {
     }
   }
 
-  return { student, showGradeSubSelect, switchSubSelect, mutationSignUp }
+  async function fetchBranchSchools() {
+    const response = await client.query({
+      query: gql`
+        query {
+          branchSchools {
+            id
+            name
+            phone
+            address
+            enabled
+          }
+        }
+      `,fetchPolicy: "no-cache"
+    });
+
+    if (response.data.branchSchools) {
+      branchSchools.value = response.data.branchSchools
+    }
+  }
+
+  return { student, showGradeSubSelect, branchSchools, switchSubSelect, mutationSignUp, fetchBranchSchools }
 })

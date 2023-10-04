@@ -1,9 +1,14 @@
 <script setup>
+  import { onMounted } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useSignUpStore } from "@/stores/signUp.js"
   const store = useSignUpStore()
-  const { switchSubSelect, mutationSignUp } = store
-  const { student, showGradeSubSelect } = storeToRefs(store)
+  const { switchSubSelect, mutationSignUp, fetchBranchSchools } = store
+  const { student, showGradeSubSelect, branchSchools } = storeToRefs(store)
+
+  onMounted(() => {
+    fetchBranchSchools()
+  })
 </script>
 
 <template>
@@ -120,22 +125,12 @@
                       <label for="inputaddress" class="form-label">地址</label>
                     </div>
                     <div class="col-md-11 mt-4">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="branchSchoolACheck" value="A" name="branchSchool_A" v-model="student.branchSchools">
-                        <label class="form-check-label" for="branchSchoolACheck">分校A</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="branchSchoolBCheck" value="B" name="branchSchool_B" v-model="student.branchSchools">
-                        <label class="form-check-label" for="branchSchoolBCheck">分校B</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="branchSchoolCCheck" value="C" name="branchSchool_C" v-model="student.branchSchools">
-                        <label class="form-check-label" for="branchSchoolCCheck">分校C</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="branchSchoolDCheck" value="D" name="branchSchool_D" v-model="student.branchSchools">
-                        <label class="form-check-label" for="branchSchoolDCheck">分校D</label>
-                      </div>
+                      <template v-for="(branchSchool, index) in branchSchools" :key="index">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" :id="branchSchool.name" :value="branchSchool.name" :name="branchSchool.name" v-model="student.branchSchools">
+                          <label class="form-check-label" :for="branchSchool.name">{{ branchSchool.name }}</label>
+                        </div>                        
+                      </template>
                     </div>
                     <div class="col-11 mt-4">
                       <button type="submit" class="btn btn-primary">送出報名</button>
