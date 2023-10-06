@@ -3,12 +3,12 @@
   import { useTodoListStore } from "@/stores/todoList.js"
 
   const store = useTodoListStore()
-  const { createTodoList } = store
+  const { todoListCreateMutation } = store
   const { title, selectedTodoList } = storeToRefs(store)
   const emits = defineEmits(['closeTodoModal', 'closeModal'])
 
   async function mutationCreate(){
-    const close = await createTodoList()
+    const close = await todoListCreateMutation()
     if(close){
       emits('closeModal')
     }

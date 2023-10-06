@@ -56,11 +56,11 @@ export const useTodoListStore = defineStore('todoList', () => {
     selectedTodoList.value = todoList
   }
 
-  async function createTodoList() {
+  async function todoListCreateMutation() {
     const response = await client.mutate({
       mutation: gql`
-        mutation createTodoList($token: String!, $title: String!, $content: String!) {
-          createTodoList (input: { token: $token, title: $title, content: $content }){
+        mutation todoListCreate($token: String!, $title: String!, $content: String!) {
+          todoListCreate (input: { token: $token, title: $title, content: $content }){
             todoList { id title content createdAt }
             success
             message
@@ -74,9 +74,9 @@ export const useTodoListStore = defineStore('todoList', () => {
       },
     });
 
-    if(response.data.createTodoList.success) {
+    if(response.data.todoListCreate.success) {
       selectedTodoList.value = { id: '', title: '', content: '' }
-      PendingTodoLists.value = response.data.createTodoList.todoList
+      PendingTodoLists.value = response.data.todoListCreate.todoList
       return true
     } else {
       toast.error(response.data.login.message, { autoClose: 3000 })
@@ -84,5 +84,5 @@ export const useTodoListStore = defineStore('todoList', () => {
     }
   }
 
-  return { PendingTodoLists, DoneTodoLists, selectedTodoList, title, fetchTodoListByStatus, assignTodoList, createTodoList }
+  return { PendingTodoLists, DoneTodoLists, selectedTodoList, title, fetchTodoListByStatus, assignTodoList, todoListCreateMutation }
 })
