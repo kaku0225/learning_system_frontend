@@ -150,62 +150,62 @@ onMounted(() => {
                 <th scope="row" class="text-center border" style="width:75px;">高中</th>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolChinese" value="highSchoolChinese" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolChinese">國文</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolChinese" value="seniorHighSchoolChinese" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolChinese">國文</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolEnglish" value="highSchoolEnglish" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolEnglish">英文</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolEnglish" value="seniorHighSchoolEnglish" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolEnglish">英文</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolMath" value="highSchoolMath" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolMath">數學</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolMath" value="seniorHighSchoolMath" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolMath">數學</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolBiology" value="highSchoolBiology" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolBiology">生物</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolBiology" value="seniorHighSchoolBiology" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolBiology">生物</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolPhysics" value="highSchoolPhysics" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolPhysics">物理</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolPhysics" value="seniorHighSchoolPhysics" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolPhysics">物理</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolChemistry" value="highSchoolChemistry" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolChemistry">化學</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolChemistry" value="seniorHighSchoolChemistry" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolChemistry">化學</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolEarthScience" value="highSchoolEarthScience" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolEarthScience">地球科學</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolEarthScience" value="seniorHighSchoolEarthScience" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolEarthScience">地球科學</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolGeography" value="highSchoolGeography" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolGeography">地理</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolGeography" value="seniorHighSchoolGeography" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolGeography">地理</label>
                   </div>
                 </td>
                 <td class="border-top border-bottom">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolHistory" value="highSchoolHistory" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolHistory">歷史</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolHistory" value="seniorHighSchoolHistory" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolHistory">歷史</label>
                   </div>
                 </td>
                 <td class="last_td">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="highSchoolCivics" value="highSchoolCivics" v-model="filter.subjects">
-                    <label class="form-check-label" for="highSchoolCivics">公民</label>
+                    <input class="form-check-input" type="checkbox" id="seniorHighSchoolCivics" value="seniorHighSchoolCivics" v-model="filter.subjects">
+                    <label class="form-check-label" for="seniorHighSchoolCivics">公民</label>
                   </div>
                 </td>
               </tr>

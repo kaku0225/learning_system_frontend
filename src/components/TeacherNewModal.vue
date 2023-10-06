@@ -172,61 +172,61 @@ function signUpOrUpdate() {
                     <th scope="row" class="text-center border" style="width:75px;">高中</th>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-chinese" value="highSchoolChinese" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-chinese" value="seniorHighSchoolChinese" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-chinese">國文</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-english" value="highSchoolEnglish" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-english" value="seniorHighSchoolEnglish" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-english">英文</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-math" value="highSchoolMath" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-math" value="seniorHighSchoolMath" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-math">數學</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-biology" value="highSchoolBiology" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-biology" value="seniorHighSchoolBiology" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-biology">生物</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-physics" value="highSchoolPhysics" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-physics" value="seniorHighSchoolPhysics" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-physics">物理</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-chemistry" value="highSchoolChemistry" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-chemistry" value="seniorHighSchoolChemistry" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-chemistry">化學</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-earth-science" value="highSchoolEarthScience" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-earth-science" value="seniorHighSchoolEarthScience" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-earth-science">地球科學</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-geography" value="highSchoolGeography" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-geography" value="seniorHighSchoolGeography" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-geography">地理</label>
                       </div>
                     </td>
                     <td class="border-top border-bottom">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-history" value="highSchoolHistory" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-history" value="seniorHighSchoolHistory" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-history">歷史</label>
                       </div>
                     </td>
                     <td class="last_td">
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="high-school-civics" value="highSchoolCivics" v-model="selectedTeacher.subjects">
+                        <input class="form-check-input" type="checkbox" id="high-school-civics" value="seniorHighSchoolCivics" v-model="selectedTeacher.subjects">
                         <label class="form-check-label" for="high-school-civics">公民</label>
                       </div>
                     </td>

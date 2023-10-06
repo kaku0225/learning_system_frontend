@@ -44,7 +44,7 @@ function mutationLogout(){
             <router-link to="/class_adviser_interface/teacher_management">老師管理</router-link>
           </li>
           <li>
-            <router-link to="/admin_interface/account_management">學員管理</router-link>
+            <router-link to="/class_adviser_interface/student_management">學員管理</router-link>
           </li>
           <li>
             <router-link to="/class_adviser_interface/teacher_schedule">排班管理</router-link>

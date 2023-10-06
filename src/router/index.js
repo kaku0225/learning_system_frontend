@@ -24,6 +24,7 @@ import BranchSchoolManagement from '../views/BranchSchoolManagement.vue'
 import ClassAdviserHoneView from '../views/ClassAdviserHomeView.vue'
 import AdministrationStaffManagement from '../views/AdministrationStaffManagement.vue'
 import TeacherManagement from '../views/TeacherManagement.vue'
+import StudentManagement from '../views/StudentManagement.vue'
 import TeacherSchedule from '../views/TeacherScheduleView.vue'
 
 const router = createRouter({
@@ -112,6 +113,12 @@ const router = createRouter({
       name: 'teacher_management',
       meta: { layout: ClassAdviserInterface },
       component: TeacherManagement
+    },
+    {
+      path: '/class_adviser_interface/student_management',
+      name: 'student_management',
+      meta: { layout: ClassAdviserInterface },
+      component: StudentManagement
     },
     {
       path: '/class_adviser_interface/teacher_schedule',
