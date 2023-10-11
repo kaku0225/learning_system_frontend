@@ -1,15 +1,32 @@
 <script setup>
-  import { onMounted } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useStudentsAccountStore } from "@/stores/studentsAccount.js"
+  import StudentNewModal from '../components/StudentNewModal.vue'
+  import Modal from 'bootstrap/js/dist/modal'
 
   const store = useStudentsAccountStore()
-  const { fetchStudents } = store
+  const { fetchStudents, fetchBranchSchools, assignSelectedStudent } = store
   const { students } = storeToRefs(store)
 
-  console.log(students)
+  const StudentModal = ref({ modal: null })
+
+  function open(student) {
+    fetchBranchSchools()
+    if(student) {
+      assignSelectedStudent(student)
+    } else {
+      assignSelectedStudent({info: { id: '', email: '', name: ''}, profile: { birthday: '', cellphone: '', phone: '', school: '', mainGrade: 'elementary_school', subGrade: 'first_grade', county: '', address: '' }, branchSchools: [] })
+    }
+    StudentModal.value.modal.show()
+  }
+
+  function hide(){
+    StudentModal.value.modal.hide()
+  }
 
   onMounted(() => {
+    StudentModal.value.modal = new Modal('#studentModal', {})
     fetchStudents()
   })
 </script>
@@ -23,7 +40,7 @@
       <br>
       <div class="d-flex justify-content-between">
         <div>
-          <button type="button" class="btn btn-primary">新增學員</button>
+          <button type="button" class="btn btn-primary" @click="open('')">新增學員</button>
         </div>
         <div>
           <div class="input-group rounded">
@@ -48,7 +65,11 @@
         <tbody>
             <template v-for="(student, index) in students" :key="index">            
               <tr>
-                <td>{{ student.name }}</td>
+                <td>
+                  <a href="#" @click="open(student)">
+                    {{ student.name }}
+                  </a>
+                </td>
                 <td>{{ student.profile.school }}</td>
                 <td>{{ student.profile.cellphone}}</td>
                 <td>{{ $t(student.profile.mainGrade) }}</td>
@@ -82,4 +103,5 @@
       </nav>
     </div>
   </div>
+  <StudentNewModal @hideModal="hide"></StudentNewModal>
 </template>
