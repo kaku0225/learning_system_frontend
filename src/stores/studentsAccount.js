@@ -109,13 +109,20 @@ export const useStudentsAccountStore = defineStore('studentsAccount', () => {
   }
 
   function assignSelectedStudent(student){
-    const { branchSchools, ...info } = student;
+    const { profile, branchSchools, ...info } = student;
 
     const schoolNames = branchSchools.map(school => school.name);
+    const newProfile = Object.assign(
+      {},
+      ...Object.keys(profile)
+        .filter(key => key !== '__typename')
+        .map(key => ({ [key]: profile[key] }))
+    );
 
     const newStudent = {
       ...info,
       branchSchools: schoolNames,
+      profile: newProfile,
     };
 
     selectedStudent.value = newStudent
@@ -168,5 +175,53 @@ export const useStudentsAccountStore = defineStore('studentsAccount', () => {
     }
   }
 
-  return { students, selectedStudent, branchSchools, showGradeSubSelect, titleText, submitButtonText, fetchStudents, switchSubSelect, fetchBranchSchools, assignSelectedStudent, mutationStudentSignUp }
+  async function mutationStudentUpdate() {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation studentUpdateByClassAdviser($id: String!, $name: String!, $email: String!, $profile: StudentProfileInput!, $branchSchools: [String!]!) {
+          studentUpdateByClassAdviser (input: { id: $id, name: $name, email: $email, profile: $profile, branchSchools: $branchSchools }){
+            students {
+              id
+              name
+              email
+              enabled
+              profile {
+                birthday
+                cellphone
+                phone
+                school
+                mainGrade
+                subGrade
+                county
+                address
+              }
+              branchSchools {
+                name
+              }
+            }
+            success
+            message
+          }
+        }
+      `,
+      variables: {
+        id: selectedStudent.value.id,
+        name: selectedStudent.value.name,
+        email: selectedStudent.value.email,
+        profile: {
+          ...selectedStudent.value.profile
+        },
+        branchSchools: selectedStudent.value.branchSchools
+      },
+    });
+    if(response.data.studentUpdateByClassAdviser.success) {
+      students.value = response.data.studentUpdateByClassAdviser.students
+      return true
+    } else {
+      toast.error(response.data.studentUpdateByClassAdviser.message, { autoClose: 3000 })
+      return false
+    }
+  }
+
+  return { students, selectedStudent, branchSchools, showGradeSubSelect, titleText, submitButtonText, fetchStudents, switchSubSelect, fetchBranchSchools, assignSelectedStudent, mutationStudentSignUp, mutationStudentUpdate }
 })

@@ -2,29 +2,27 @@
   import { storeToRefs } from 'pinia'
   import { useStudentsAccountStore } from "@/stores/studentsAccount.js"
   const store = useStudentsAccountStore()
-  const { switchSubSelect, mutationStudentSignUp } = store
+  const { switchSubSelect, mutationStudentSignUp, mutationStudentUpdate } = store
   const { selectedStudent, branchSchools, showGradeSubSelect, titleText, submitButtonText } = storeToRefs(store)
   const emits = defineEmits(['hideModal'])
 
   async function mutationSignUp(){
     const hide = await mutationStudentSignUp()
-    console.log('hide')
-    console.log(hide)
     if(hide){
       emits('hideModal')
     }
   }
 
-  // async function mutationUpdate(){
-  // const hide = await mutationTeacherUpdate()
-  //   if(hide){
-  //     emits('hideModal')
-  //   }
-  // }
+  async function mutationUpdate(){
+    const hide = await mutationStudentUpdate()
+    if(hide){
+      emits('hideModal')
+    }
+  }
 
   function signUpOrUpdate() {
     if(selectedStudent.value.id) {
-      // mutationUpdate()
+      mutationUpdate()
     } else {
       mutationSignUp()
     }
