@@ -223,5 +223,45 @@ export const useStudentsAccountStore = defineStore('studentsAccount', () => {
     }
   }
 
-  return { students, selectedStudent, branchSchools, showGradeSubSelect, titleText, submitButtonText, fetchStudents, switchSubSelect, fetchBranchSchools, assignSelectedStudent, mutationStudentSignUp, mutationStudentUpdate }
+  async function mutationSwitchEnabled(id) {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation switchEnabled($id: String!) {
+          switchEnabled (input: { id: $id }){
+            students {
+              id
+              name
+              email
+              enabled
+              profile {
+                birthday
+                cellphone
+                phone
+                school
+                mainGrade
+                subGrade
+                county
+                address
+              }
+              branchSchools {
+                name
+              }
+            }
+            success
+            message
+          }
+        }
+      `,
+      variables: {
+        id: id,
+      },
+    });
+    if(response.data.switchEnabled.success) {
+      students.value = response.data.switchEnabled.students
+    } else {
+      toast.error(response.data.switchEnabled.message, { autoClose: 3000 })
+    }
+  }
+
+  return { students, selectedStudent, branchSchools, showGradeSubSelect, titleText, submitButtonText, fetchStudents, switchSubSelect, fetchBranchSchools, assignSelectedStudent, mutationStudentSignUp, mutationStudentUpdate, mutationSwitchEnabled }
 })

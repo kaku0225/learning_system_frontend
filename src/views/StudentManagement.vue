@@ -6,7 +6,7 @@
   import Modal from 'bootstrap/js/dist/modal'
 
   const store = useStudentsAccountStore()
-  const { fetchStudents, fetchBranchSchools, assignSelectedStudent } = store
+  const { fetchStudents, fetchBranchSchools, assignSelectedStudent, mutationSwitchEnabled } = store
   const { students } = storeToRefs(store)
 
   const StudentModal = ref({ modal: null })
@@ -76,7 +76,7 @@
                 <td>{{ student.branchSchools.map(school => school.name).join('、') }}</td>
                 <td>
                   <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" :checked="student.enabled">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" :checked="student.enabled" @click="mutationSwitchEnabled(student.id)">
                     <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                   </div>
                 </td>
