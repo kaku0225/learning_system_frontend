@@ -28,6 +28,8 @@ export const useStudentsAccountStore = defineStore('studentsAccount', () => {
 
   const branchSchools = ref([])
 
+  const filter = ref({ name: '' })
+
   const showGradeSubSelect = computed(() => {
     return {
       elementary: selectedStudent.value.profile.mainGrade === 'elementary_school' ? true : false,
@@ -43,6 +45,12 @@ export const useStudentsAccountStore = defineStore('studentsAccount', () => {
   const titleText = computed(() => {
     return selectedStudent.value.id ? '更新學生' : '新增學生';
   })
+
+  const filteredStudents = computed(() => {
+    return students.value.filter((student) =>
+      student.name.includes(filter.value.name)
+    );
+  });
 
   async function fetchStudents() {
     const response = await client.query({
@@ -263,5 +271,5 @@ export const useStudentsAccountStore = defineStore('studentsAccount', () => {
     }
   }
 
-  return { students, selectedStudent, branchSchools, showGradeSubSelect, titleText, submitButtonText, fetchStudents, switchSubSelect, fetchBranchSchools, assignSelectedStudent, mutationStudentSignUp, mutationStudentUpdate, mutationSwitchEnabled }
+  return { filteredStudents, selectedStudent, branchSchools, showGradeSubSelect, titleText, submitButtonText, filter, fetchStudents, switchSubSelect, fetchBranchSchools, assignSelectedStudent, mutationStudentSignUp, mutationStudentUpdate, mutationSwitchEnabled }
 })

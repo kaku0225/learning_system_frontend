@@ -7,7 +7,7 @@
 
   const store = useStudentsAccountStore()
   const { fetchStudents, fetchBranchSchools, assignSelectedStudent, mutationSwitchEnabled } = store
-  const { students } = storeToRefs(store)
+  const { filteredStudents, filter } = storeToRefs(store)
 
   const StudentModal = ref({ modal: null })
 
@@ -44,7 +44,7 @@
         </div>
         <div>
           <div class="input-group rounded">
-            <input type="search" class="form-control rounded" placeholder="Search Name" aria-label="Search" aria-describedby="search-addon" />
+            <input type="search" class="form-control rounded" placeholder="Search Name" aria-label="Search" aria-describedby="search-addon" v-model="filter.name" />
             <span class="input-group-text border-0" id="search-addon">
               <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
             </span>
@@ -63,7 +63,7 @@
           </tr>
         </thead>
         <tbody>
-            <template v-for="(student, index) in students" :key="index">            
+            <template v-for="(student, index) in filteredStudents" :key="index">            
               <tr>
                 <td>
                   <a href="#" @click="open(student)">
